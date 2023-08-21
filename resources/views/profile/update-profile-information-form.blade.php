@@ -52,11 +52,32 @@
             </div>
         @endif
 
-        <!-- Name -->
+        <!-- Nombre -->
         <div class="col-span-6 sm:col-span-4">
             <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" required autocomplete="name" />
+            <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.nombre" required autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
+        </div>
+
+        <!-- Apellido Paterno -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="apPaterno" value="Apellido Paterno" />
+            <x-input id="apPaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apPaterno" required autocomplete="apPaterno" />
+            <x-input-error for="apPaterno" class="mt-2" />
+        </div>
+
+        <!-- Apellido Materno -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="apMaterno" value="Apellido Materno" />
+            <x-input id="apMaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apMaterno" required autocomplete="apMaterno" />
+            <x-input-error for="apMaterno" class="mt-2" />
+        </div>
+
+        <!-- Telefono -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="telefono" value="Telefono" />
+            <x-input id="telefono" type="text" class="mt-1 block w-full" wire:model.defer="state.telefono" required autocomplete="telefono" />
+            <x-input-error for="telefono" class="mt-2" />
         </div>
 
         <!-- Email -->

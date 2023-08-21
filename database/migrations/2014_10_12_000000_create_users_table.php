@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('apMaterno');
             $table->string('telefono');
             $table->string('email')->unique();
+            $table->enum('tipoUsuario', ['Usuario', 'Administrador']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
