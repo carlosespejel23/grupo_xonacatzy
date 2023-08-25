@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mercado_id');
-            $table->foreign('mercado_id')->references('id')->on('mercados');
+            $table->foreign('mercado_id')->references('id')->on('mercados')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('producto_id');
-            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('cantidad');
             $table->date('fecha');
             $table->timestamps();

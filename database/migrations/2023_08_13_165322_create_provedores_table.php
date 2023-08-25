@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('provedores', function (Blueprint $table) {
             $table->id();
-            $table->string('provedor')->nullable();
-            $table->decimal('cantidad', $precision = 10, $scale = 3)->default('0.000');
-            $table->date('fecha_ingreso');
+            $table->string('nombre');
+            $table->string('telefono')->nullable();
             $table->timestamps();
         });
     }

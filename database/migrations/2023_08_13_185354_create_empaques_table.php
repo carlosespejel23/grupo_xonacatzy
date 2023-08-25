@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('empaques', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->on('cultivos');
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('num_bolsas');
             $table->integer('gramos');
             $table->string('encargado')->nullable();

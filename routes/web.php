@@ -36,13 +36,22 @@ Route::middleware([
     //Seccion "Inventario de Semillas (IDS)"
     Route::get('/inventario-semillas', [IDSController::class, 'index'])->name('inventario.index');
 
-    //Panel de administrador
+    //Panel de administrador (navbar)
     Route::get('/administrador', [AdministradorController::class, 'index'])->name('administrador.index');
     Route::get('/administrador/usuarios', [AdministradorController::class, 'usuarios'])->name('administrador.usuarios');
     Route::get('/administrador/cultivos', [AdministradorController::class, 'cultivos'])->name('administrador.cultivos');
     Route::get('/administrador/productos', [AdministradorController::class, 'productos'])->name('administrador.productos');
     Route::get('/administrador/ventas', [AdministradorController::class, 'ventas'])->name('administrador.ventas');
 
-    //Panel de administrador "Seccion Usuarios"
+    //Panel de administrador "Seccion Usuarios" (Eliminar un usuario)
     Route::delete('/administrador/usuarios/{id}', [AdministradorController::class, 'usuario_delete'])->name('administrador.usuario-delete');
+
+    //Panel de administrador "Seccion Cultivos / Provedores"
+    Route::post('/administrador/cultivos', [AdministradorController::class, 'cultivo_create'])->name('administrador.cultivo-create');
+    Route::patch('/administrador/cultivos/{id}', [AdministradorController::class, 'cultivo_update'])->name('administrador.cultivo-update');
+    Route::delete('/administrador/cultivos/{id}', [AdministradorController::class, 'cultivo_delete'])->name('administrador.cultivo-delete');
+    Route::get('/administrador/cultivos/provedores', [AdministradorController::class, 'provedor'])->name('administrador.provedor');
+    Route::post('/administrador/cultivos/provedores', [AdministradorController::class, 'provedor_create'])->name('administrador.provedor-create');
+    Route::patch('/administrador/cultivos/provedores/{id}', [AdministradorController::class, 'provedor_update'])->name('administrador.provedor-update');
+    Route::delete('/administrador/cultivos/provedores/{id}', [AdministradorController::class, 'provedor_delete'])->name('administrador.provedor-delete');
 });

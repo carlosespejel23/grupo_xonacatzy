@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('camas_cosechas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cosecha_id');
-            $table->foreign('cosecha_id')->references('id')->on('cosechas');
+            $table->foreign('cosecha_id')->references('id')->on('cosechas')->onDelete('cascade')->onUpdate('cascade');
             $table->string('num_cama');
             $table->timestamps();
         });

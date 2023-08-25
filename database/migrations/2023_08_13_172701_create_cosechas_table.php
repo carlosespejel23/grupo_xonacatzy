@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cosechas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id')->references('id')->on('cultivos');
+            $table->foreign('cultivo_id')->references('id')->on('cultivos')->onDelete('restrict')->onUpdate('cascade');
             $table->decimal('num_botes', $precision = 10, $scale = 1)->default('0.0');
             $table->string('invernadero')->nullable();
             $table->string('corte')->nullable();

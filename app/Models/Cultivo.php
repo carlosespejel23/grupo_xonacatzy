@@ -12,6 +12,14 @@ class Cultivo extends Model
     protected $fillable = [
         'provedor_id',
         'nombre',
-        'nombre_tecnico'
+        'nombre_tecnico',
+        'cantidad',
+        'fecha_ingreso'
     ];
+
+    //Relacion a tabla provedores
+    public function provedor()
+    {
+        return $this->belongsTo(Provedor::class, 'provedor_id'); // 'provedor_id' debe ser el nombre del campo de clave foránea en la tabla 'cultivos'.
+    }
 }

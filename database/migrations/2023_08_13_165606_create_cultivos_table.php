@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('cultivos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('provedor_id');
-            $table->foreign('provedor_id', 'fk_provedor_cultivo')->references('id')->on('provedores')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('provedor_id', 'fk_provedor_cultivo')->references('id')->on('provedores')->onDelete('restrict')->onUpdate('cascade');
             $table->string('nombre');
-            $table->string('nombre_tecnico');
+            $table->string('nombre_tecnico')->nullable();
+            $table->integer('cantidad');
+            $table->date('fecha_ingreso');
             $table->timestamps();
         });
     }

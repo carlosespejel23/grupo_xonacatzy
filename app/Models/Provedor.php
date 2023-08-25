@@ -11,7 +11,6 @@ class Provedor extends Model
     protected $table = 'provedores';
     protected $fillable = [
         'provedor',
-        'cantidad',
-        'fecha_ingreso',
+        'telefono'
     ];
 }

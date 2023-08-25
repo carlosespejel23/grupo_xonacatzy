@@ -16,6 +16,9 @@
 
         <!-- Styles -->
         @livewireStyles
+
+        <!-- Include Flowbite Datepicker -->
+        <script src="{{ asset('js/datepicker.min.js') }}"></script>
     </head>
     <body class="font-sans antialiased">
         <x-banner />
