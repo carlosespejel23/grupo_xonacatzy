@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('provedor_id');
             $table->foreign('provedor_id', 'fk_provedor_registro')->references('id')->on('provedores')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('cultivo_id');
-            $table->foreign('cultivo_id', 'fk_cultivo_provedor')->references('id')->on('cultivos')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('cultivo_id', 'fk_cultivo_provedor')->references('id')->on('cultivos')->onDelete('cascade')->onUpdate('restrict');
             $table->string('encargado1');
             $table->date('fecha_salida');
             $table->integer('cantidad');

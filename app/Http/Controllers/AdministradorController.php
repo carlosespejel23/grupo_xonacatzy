@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cultivo;
+use App\Models\Producto;
 use App\Models\Provedor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,6 +24,18 @@ class AdministradorController extends Controller
         }
     }
 
+    //Rederiza la seccion de ventas
+    public function ventas(Request $request) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            return view('administrador.ventas');
+        } else {
+            return view('dashboard');
+        }
+    }
+
     //Rederiza la seccion de usuarios
     public function usuarios(Request $request) {
         $userId = $request->user()->id;
@@ -31,44 +44,6 @@ class AdministradorController extends Controller
         // Verifica si el rol del usuario es'Administrador'
         if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
             return view('administrador.usuarios', compact('usuarios'));
-        } else {
-            return view('dashboard');
-        }
-    }
-
-    //Rederiza la seccion de cultivos
-    public function cultivos(Request $request) {
-        $userId = $request->user()->id;
-        $provedores = Provedor::all();
-        $cultivos = Cultivo::all();
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            return view('administrador.cultivos', compact('provedores', 'cultivos'));
-        } else {
-            return view('dashboard');
-        }
-    }
-
-    //Rederiza la seccion de productos
-    public function productos(Request $request) {
-        $userId = $request->user()->id;
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            return view('administrador.productos');
-        } else {
-            return view('dashboard');
-        }
-    }
-
-    //Rederiza la seccion de ventas
-    public function ventas(Request $request) {
-        $userId = $request->user()->id;
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            return view('administrador.ventas');
         } else {
             return view('dashboard');
         }
@@ -85,6 +60,20 @@ class AdministradorController extends Controller
         return redirect()->route('administrador.usuarios');
     }
 
+    //Rederiza la seccion de cultivos
+    public function cultivos(Request $request) {
+        $userId = $request->user()->id;
+        $provedores = Provedor::all();
+        $cultivos = Cultivo::all();
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            return view('administrador.cultivos', compact('provedores', 'cultivos'));
+        } else {
+            return view('dashboard');
+        }
+    }
+
     //Crear un cultivo
     public function cultivo_create(Request $request) {
         $validated = $request->validate([
@@ -95,13 +84,15 @@ class AdministradorController extends Controller
             'cantidad' => 'required|numeric',
         ]);
 
-        DB::table('cultivos')->insert([
-            'provedor_id' => $request->provedor_id,
-            'nombre' => $request->nombre,
-            'nombre_tecnico' => $request->nombre_tecnico,
-            'fecha_ingreso' => $request->fecha_ingreso,
-            'cantidad' => $request->cantidad,
-        ]);
+        // Crear una nueva instancia del modelo Cultivo
+        $cultivo = new Cultivo;
+        $cultivo->provedor_id = $request->provedor_id;
+        $cultivo->nombre = $request->nombre;
+        $cultivo->nombre_tecnico = $request->nombre_tecnico;
+        $cultivo->fecha_ingreso = $request->fecha_ingreso;
+        $cultivo->cantidad = $request->cantidad;
+
+        $cultivo->save();
 
         session()->flash('flash.banner', 'El cultivo se ha creado correctamente');
         session()->flash('flash.bannerStyle', 'success');
@@ -111,26 +102,33 @@ class AdministradorController extends Controller
 
     //Actualiza un cultivo
     public function cultivo_update(Request $request, $id) {
-        $validated = $request->validate([
-            'provedor_id' => 'required',
-            'nombre' => 'required',
-            'nombre_tecnico' => 'nullable',
-            'fecha_ingreso' => 'required|date',
-            'cantidad' => 'required|numeric',
-        ]);
+        try {
+            $validated = $request->validate([
+                'provedor_id' => 'required',
+                'nombre' => 'required',
+                'nombre_tecnico' => 'nullable',
+                'fecha_ingreso' => 'required|date',
+                'cantidad' => 'required|numeric',
+            ]);
+    
+            DB::table('cultivos')->where('id', $id)->update([
+                'provedor_id' => $request->provedor_id,
+                'nombre' => $request->nombre,
+                'nombre_tecnico' => $request->nombre_tecnico,
+                'fecha_ingreso' => $request->fecha_ingreso,
+                'cantidad' => $request->cantidad,
+            ]);
+    
+            session()->flash('flash.banner', 'El cultivo se ha actualizado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+    
+            return redirect()->route('administrador.cultivos');
+        } catch (\Throwable $th) {
+            session()->flash('flash.banner', 'No puede actualizar el cultivo porque esta registrado en el Inventario de Semillas');
+            session()->flash('flash.bannerStyle', 'danger');
 
-        DB::table('cultivos')->where('id', $id)->update([
-            'provedor_id' => $request->provedor_id,
-            'nombre' => $request->nombre,
-            'nombre_tecnico' => $request->nombre_tecnico,
-            'fecha_ingreso' => $request->fecha_ingreso,
-            'cantidad' => $request->cantidad,
-        ]);
-
-        session()->flash('flash.banner', 'El cultivo se ha actualizado correctamente');
-        session()->flash('flash.bannerStyle', 'success');
-
-        return redirect()->route('administrador.cultivos');
+            return redirect()->route('administrador.cultivos');
+        }
     }
 
     //Elimina un cultivo
@@ -149,6 +147,75 @@ class AdministradorController extends Controller
             session()->flash('flash.bannerStyle', 'danger');
 
             return redirect()->route('administrador.cultivos');
+        }
+    }
+
+    //Rederiza la seccion de productos
+    public function productos(Request $request) {
+        $userId = $request->user()->id;
+        $productos = Producto::all();
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            return view('administrador.productos', compact('productos'));
+        } else {
+            return view('dashboard');
+        }
+    }
+
+    //Crear un producto
+    public function producto_create(Request $request) {
+        $validated = $request->validate([
+            'nombre' => 'required',
+            'precio' => 'required|numeric',
+        ]);
+
+        // Crear una nueva instancia del modelo Producto
+        $producto = new Producto;
+        $producto->nombre = $request->nombre;
+        $producto->precio = $request->precio;
+
+        $producto->save();
+
+        session()->flash('flash.banner', 'El producto se ha creado correctamente');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('administrador.productos');
+    }
+
+    //Actualizar un producto
+    public function producto_update(Request $request, $id) {
+        $validated = $request->validate([
+            'nombre' => 'required',
+            'precio' => 'required|numeric',
+        ]);
+
+        DB::table('productos')->where('id', $id)->update([
+            'nombre' => $request->nombre,
+            'precio' => $request->precio,
+        ]);
+
+        session()->flash('flash.banner', 'El producto se ha actualizado correctamente');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return redirect()->route('administrador.productos');
+    }
+
+    //Eliminar un producto
+    public function producto_delete($id) {
+        $producto = DB::table('productos')->where('id', $id);
+        try {
+            $producto->delete();
+
+            session()->flash('flash.banner', 'El producto se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('administrador.productos');
+        } catch (\Throwable $th) {
+            session()->flash('flash.banner', 'No puede eliminar el producto porque esta registrado en las ventas');
+            session()->flash('flash.bannerStyle', 'danger');
+
+            return redirect()->route('administrador.productos');
         }
     }
 
@@ -172,10 +239,12 @@ class AdministradorController extends Controller
             'telefono' => 'nullable',
         ]);
 
-        DB::table('provedores')->insert([
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-        ]);
+        // Crear una nueva instancia del modelo Provedor
+        $provedor = new Provedor;
+        $provedor->nombre = $request->nombre;
+        $provedor->telefono = $request->telefono;
+
+        $provedor->save();
 
         session()->flash('flash.banner', 'El provedor se ha creado correctamente');
         session()->flash('flash.bannerStyle', 'success');

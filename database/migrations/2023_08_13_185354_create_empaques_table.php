@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('cultivo_id');
             $table->foreign('cultivo_id')->references('id')->on('cultivos')->onDelete('restrict')->onUpdate('cascade');
-            $table->integer('num_bolsas');
-            $table->integer('gramos');
+            $table->integer('num_bolsas')->nullable();
+            $table->integer('gramos')->nullable();
             $table->string('encargado')->nullable();
-            $table->decimal('temp_inicial', $precision = 10, $scale = 1)->default('0.0')->nullable();
-            $table->decimal('temp_final', $precision = 10, $scale = 1)->default('0.0')->nullable();
-            $table->decimal('H2O', $precision = 10, $scale = 1)->default('0.0')->nullable();
+            $table->decimal('temp_inicial', $precision = 10, $scale = 2)->nullable();
+            $table->decimal('temp_final', $precision = 10, $scale = 2)->nullable();
+            $table->decimal('H2O', $precision = 10, $scale = 2)->nullable();
             $table->date('fecha');
             $table->timestamps();
         });

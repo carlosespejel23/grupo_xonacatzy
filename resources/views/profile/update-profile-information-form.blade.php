@@ -53,25 +53,49 @@
         @endif
 
         <!-- Nombre -->
+        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
         <div class="col-span-6 sm:col-span-4">
             <x-label for="name" value="{{ __('Name') }}" />
             <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.nombre" required autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
         </div>
+        @else
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="name" value="{{ __('Name') }}" />
+            <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.nombre" required autocomplete="name" disabled />
+            <x-input-error for="name" class="mt-2" />
+        </div>
+        @endif
 
         <!-- Apellido Paterno -->
+        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
         <div class="col-span-6 sm:col-span-4">
             <x-label for="apPaterno" value="Apellido Paterno" />
             <x-input id="apPaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apPaterno" required autocomplete="apPaterno" />
             <x-input-error for="apPaterno" class="mt-2" />
         </div>
+        @else
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="apPaterno" value="Apellido Paterno" />
+            <x-input id="apPaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apPaterno" required autocomplete="apPaterno" disabled />
+            <x-input-error for="apPaterno" class="mt-2" />
+        </div>
+        @endif
 
         <!-- Apellido Materno -->
+        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
         <div class="col-span-6 sm:col-span-4">
             <x-label for="apMaterno" value="Apellido Materno" />
             <x-input id="apMaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apMaterno" required autocomplete="apMaterno" />
             <x-input-error for="apMaterno" class="mt-2" />
         </div>
+        @else
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="apMaterno" value="Apellido Materno" />
+            <x-input id="apMaterno" type="text" class="mt-1 block w-full" wire:model.defer="state.apMaterno" required autocomplete="apMaterno" disabled />
+            <x-input-error for="apMaterno" class="mt-2" />
+        </div>
+        @endif
 
         <!-- Telefono -->
         <div class="col-span-6 sm:col-span-4">

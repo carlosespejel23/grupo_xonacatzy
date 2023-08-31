@@ -59,7 +59,7 @@
                                 </div>
 
                                 <div class="block mb-2">
-                                    <x-label for="nombre_tecnico" value="{{ __('Nombre Técnico') }}" />
+                                    <x-label for="nombre_tecnico" value="{{ __('Nombre Técnico (opcional)') }}" />
                                     <x-input id="nombre_tecnico" class="block mt-1 w-full" type="text" name="nombre_tecnico" :value="old('nombre_tecnico')" autofocus autocomplete="nombre_tecnico" />
                                     <x-input-error for="nombre_tecnico" class="mt-2" />
                                 </div>
@@ -213,7 +213,7 @@
                                                 </div>
                 
                                                 <div class="block mb-2">
-                                                    <x-label for="nombre_tecnico" value="{{ __('Nombre Técnico') }}" />
+                                                    <x-label for="nombre_tecnico" value="{{ __('Nombre Técnico (opcional)') }}" />
                                                     <x-input id="nombre_tecnico" class="block mt-1 w-full" type="text" name="nombre_tecnico" :value="$cultivo->nombre_tecnico" autofocus autocomplete="nombre_tecnico" />
                                                     <x-input-error for="nombre_tecnico" class="mt-2" />
                                                 </div>
@@ -257,25 +257,15 @@
                         <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM21.6667 28.3333H18.3334V25H21.6667V28.3333ZM21.6667 21.6666H18.3334V11.6666H21.6667V21.6666Z" />
                     </svg>
                 </div>
-            
-                @if ($cultivos->count())
                 <div class="px-4 py-2 -mx-3">
                     <div class="mx-3">
-                        <span class="font-semibold text-red-500">Ups!!! :(</span>
-                        <p class="text-sm text-gray-600">Aun no tienes cultivos.</p>
+                        <span class="font-semibold text-red-500">Ups!!! Parece que aún no hay registros :(</span>
                     </div>
                 </div>
-                @else
-                <div class="px-4 py-2 -mx-3">
-                    <div class="mx-3">
-                        <span class="font-semibold text-red-500">Ups!!! :(</span>
-                        <p class="text-sm text-gray-600">Aun no tienes provedores. Antes de registar un cultivo, debes tener al menos un provedor en tu lista.</p>
-                    </div>
-                </div>
-                @endif
             </div>
 
             @endif
+            
         </div>
     </div>
 </x-admin-layout>

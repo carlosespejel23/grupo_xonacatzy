@@ -19,6 +19,8 @@
 
         <!-- Include Flowbite Datepicker -->
         <script src="{{ asset('js/datepicker.min.js') }}"></script>
+
+        <script src="https://kit.fontawesome.com/eef980f98b.js" crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased">
         <x-banner />

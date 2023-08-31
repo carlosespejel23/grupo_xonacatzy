@@ -18,6 +18,11 @@
                     <x-nav-link href="{{ route('inventario.index') }}" :active="request()->routeIs('inventario.index')">
                         {{ 'Inventario de Semillas' }}
                     </x-nav-link>
+                    @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                    <x-nav-link href="{{ route('diaVentas.index') }}" :active="request()->routeIs('diaVentas.index')">
+                        {{ 'Día de Ventas' }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -154,6 +159,11 @@
             <x-responsive-nav-link href="{{ route('inventario.index') }}" :active="request()->routeIs('inventario.index')">
                 {{ 'Inventario de Semillas' }}
             </x-responsive-nav-link>
+            @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+            <x-responsive-nav-link href="{{ route('diaVentas.index') }}" :active="request()->routeIs('diaVentas.index')">
+                {{ 'Día de Ventas' }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -198,39 +208,6 @@
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
-
-                <!-- Team Management -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <div class="border-t border-gray-200"></div>
-
-                    <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Manage Team') }}
-                    </div>
-
-                    <!-- Team Settings -->
-                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
-                        {{ __('Team Settings') }}
-                    </x-responsive-nav-link>
-
-                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
-                            {{ __('Create New Team') }}
-                        </x-responsive-nav-link>
-                    @endcan
-
-                    <!-- Team Switcher -->
-                    @if (Auth::user()->allTeams()->count() > 1)
-                        <div class="border-t border-gray-200"></div>
-
-                        <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('Switch Teams') }}
-                        </div>
-
-                        @foreach (Auth::user()->allTeams() as $team)
-                            <x-switchable-team :team="$team" component="responsive-nav-link" />
-                        @endforeach
-                    @endif
-                @endif
             </div>
         </div>
     </div>
