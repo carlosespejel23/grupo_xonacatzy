@@ -22,7 +22,7 @@
                     <div class="max-w-6xl mx-auto">
                         <div class="flex items-center space-x-4">
                             <x-button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
-                                Agregar Registro
+                                Agregar Registro&nbsp;<i class="fa-solid fa-plus"></i>
                             </x-button>
                     
                             <div class="relative max-w-xs">
@@ -33,11 +33,16 @@
                                 </div>
                                 <input datepicker id="fecha_ingreso" name="fecha_ingreso" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5" placeholder="Consultar Registros">
                             </div>
+                    
                             <x-button id="consultaBtn" class="bg-green-500 text-white">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </x-button>
+                    
+                            <x-button type="button" data-modal-target="top-left-modal" data-modal-toggle="top-left-modal">
+                                <i class="fa-solid fa-list-check"></i>
+                            </x-button>
                         </div>
-                    </div>
+                    </div>                    
                     <br>
         
                     <!-- Modal para agregar un registro -->
@@ -179,7 +184,7 @@
                     </div>
         
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-                        {{ __('Cosechas') }}
+                        {{ __('Cosechas') }} &nbsp;<i class="fa-solid fa-seedling"></i>
                     </h2><br>
 
                     <!-- Tabla de cosechas -->
@@ -193,7 +198,7 @@
                                         Cultivo
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Número de Botes
+                                        No. de Botes
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Invernadero
@@ -224,7 +229,7 @@
                                         </td>
                                         @else
                                         <td class="px-6 py-4">
-                                            No Registado
+                                            --
                                         </td>
                                         @endif
                                         <th class="px-6 py-4">
@@ -236,7 +241,7 @@
                                         </td>
                                         @else
                                         <td class="px-6 py-4">
-                                            No Registado
+                                            --
                                         </td>
                                         @endif
                                         <td class="px-6 py-4" scope="row">
@@ -257,7 +262,7 @@
                                         Cultivo
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Número de Botes
+                                        No. de Botes
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Invernadero
@@ -291,26 +296,135 @@
                     
                     <div class="max-w-6xl mx-auto">
                         <div class="flex items-center space-x-4">
-                            <x-button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
+                            <button data-modal-target="combinado-modal" data-modal-toggle="combinado-modal" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 mr-2 mb-2 focus:outline-none">
                                 Agregar Combinado
-                            </x-button>
-                            <input type="hidden" datename="">
+                            </button>
                         </div>
-                    </div>
+                    </div>                                        
                     <br>
 
                     <!-- Modal para agregar un combinado -->
+                    <div id="combinado-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative w-full max-w-md max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="combinado-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                    </svg>
+                                    <span class="sr-only">Cancelar</span>
+                                </button>
+                                <div class="px-6 py-6 lg:px-8">
+                                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                                        Agregar Combinado
+                                    </h2>
+                                    <form class="space-y-6" method="POST" action="{{ route('combinados-create') }}">
+                                        @csrf
+                                        <div class="block mb-2">
+                                            <label for=" cultivo_id" class="text-sm font-medium text-gray-900">Escoger Cultivo</label>
+                                            <select id=" cultivo_id" name=" cultivo_id" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
+                                                @foreach ($cultivos as $cultivo)
+                                                <option value="{{ $cultivo->id }}">{{ $cultivo->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                            <x-input-error for="cultivo_id" class="mt-2" />
+                                        </div>
+        
+                                        <div class="block mb-2">
+                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas') }}" />
+                                            <x-input id="num_bolsas" class="block mt-1 w-full" type="number" name="num_bolsas" :value="old('num_bolsas')" autofocus autocomplete="num_bolsas" />
+                                            <x-input-error for="num_bolsas" class="mt-2" />
+                                        </div>
+            
+                                        <div class="block mb-2">
+                                            <x-label for="gramos" value="{{ __('Gramos') }}" />
+                                            <x-input id="gramos" class="block mt-1 w-full" type="number" name="gramos" :value="old('gramos')" required autofocus autocomplete="gramos" />
+                                            <x-input-error for="gramos" class="mt-2" />
+                                        </div>
 
+                                        <div class="flex items-center justify-end mt-4">
+                                            <x-button class="ml-4">
+                                                {{ 'Registrar Cultivo' }}
+                                            </x-button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para mostrar las actividades diarias-->
+                    <div id="top-left-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative w-full max-w-md max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <!-- Modal header -->
+                                <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                                    <i class="fa-solid fa-list-check fa-lg"></i>
+                                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="top-left-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="p-6 space-y-6">
+                                    <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+                                        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+                                            Actividades Diarias
+                                        </h2>
+                                        <form id="formularioTareas" class="space-y-6" method="POST" action="{{ route('tareas-diarias-create') }}">
+                                            @csrf
+                                            <div class="flex items-center space-x-4">
+                                                <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" autofocus autocomplete="nombre" />
+                                                <x-input-error for="nombre" class="mt-2" />
+                                                <x-button class="ml-4">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </x-button>
+                                            </div>
+                                        </form><br>
+                                
+                                        <ol id="listaTareas" class="relative border-l border-gray-200 dark:border-gray-700">
+                                        @if ($tareas->count())
+                                            @foreach ($tareas as $index => $tarea)
+                                                <li class="ml-6">
+                                                    <span class="absolute flex items-center justify-center w-6 h-6 bg-green-100 rounded-full -left-3 ring-8 ring-white">
+                                                        <svg class="w-2.5 h-2.5 text-green-800 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                            <i class="fa-solid fa-check fa-sm"></i>&nbsp;
+                                                        </svg>
+                                                    </span>
+                                                    <h3 class="mb-1 text-md font-semibold text-gray-900">{{$tarea->nombre}}</h3>
+                                                    <time class="block mb-2 text-sm font-normal leading-none text-gray-400">&nbsp;</time>
+                                                </li>
+                                            @endforeach
+                                
+                                        @else
+                                            <li class="ml-6">
+                                                <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white">
+                                                    <svg class="w-2.5 h-2.5 text-red-800 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                        <i class="fa-solid fa-face-frown fa-sm"></i>&nbsp;
+                                                    </svg>
+                                                </span>
+                                                <h3 class="mb-1 text-md font-semibold text-red-800">Todavía no hay actividades registradas.</h3>
+                                            </li>
+                                        @endif
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-                        {{ __('Empaques') }}
+                        {{ __('Empaques') }} &nbsp;<i class="fa-solid fa-box-open"></i>
                     </h2><br>
 
                     <!-- Tabla de empaques -->
                     @if ($empaques->count())
                     
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table id="cosechasTable" class="w-full text-sm text-center text-gray-500">
+                        <table id="empaquesTable" class="w-full text-sm text-center text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -342,7 +456,7 @@
                                             </td>
                                             @else
                                             <td class="px-6 py-4">
-                                                No Registado
+                                                --
                                             </td>
                                         @endif
                                         @if ($empaque->gramos !== null)
@@ -351,7 +465,7 @@
                                             </td>
                                             @else
                                             <td class="px-6 py-4">
-                                                No Registado
+                                                --
                                             </td>
                                         @endif
                                             @if ($empaque->temp_inicial !== null)
@@ -360,7 +474,7 @@
                                             </td>
                                             @else
                                             <td class="px-6 py-4">
-                                                No Registado
+                                                --
                                             </td>
                                         @endif
                                         @if ($empaque->temp_final !== null)
@@ -369,7 +483,7 @@
                                             </td>
                                             @else
                                             <td class="px-6 py-4">
-                                                No Registado
+                                                --
                                             </td>
                                         @endif
                                         @if ($empaque->H2O !== null)
@@ -378,28 +492,83 @@
                                             </td>
                                             @else
                                             <td class="px-6 py-4">
-                                                No Registado
+                                                --
                                             </td>
                                         @endif
                                         <td class="px-6 py-4" scope="row">
-                                            <a href="{{ route('empaques-update', $empaque->id) }}" class="text-sm font-medium text-gray-900">
-                                                <i class="fa-solid fa-edit"></i>
+                                            <a data-modal-target="edit-modal-{{ $index }}" data-modal-toggle="edit-modal-{{ $index }}" class="text-sm font-medium text-gray-900">
+                                                <i class="fa-solid fa-pen"></i>
                                             </a>
                                         </td>
                                     </tr>
         
+                                    <!-- Modal para editar un cultivo -->
+                                    <div id="edit-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative w-full max-w-md max-h-full">
+                                            <div class="relative bg-white rounded-lg shadow">
+                                                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-modal-{{ $index }}">
+                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                    </svg>
+                                                    <span class="sr-only">Cancelar</span>
+                                                </button>
+                                                <form method="POST" action="{{ route('empaques-update', $empaque->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <div class="px-6 py-6 lg:px-8">
+                                                        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+                                                            {{$empaque->nombre}}
+                                                        </h2><br>
+                                                        <div class="block mb-2">
+                                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas') }}" />
+                                                            <x-input id="num_bolsas" class="block mt-1 w-full" type="text" name="num_bolsas" :value="$empaque->num_bolsas" autofocus autocomplete="num_bolsas" />
+                                                            <x-input-error for="num_bolsas" class="mt-2" />
+                                                        </div>
+                        
+                                                        <div class="block mb-2">
+                                                            <x-label for="gramos" value="{{ __('Gramos') }}" />
+                                                            <x-input id="gramos" class="block mt-1 w-full" type="text" name="gramos" :value="$empaque->gramos" autofocus autocomplete="gramos" />
+                                                            <x-input-error for="gramos" class="mt-2" />
+                                                        </div>
+                            
+                                                        <div class="block mb-2">
+                                                            <x-label for="temp_inicial" value="{{ __('°C Inicial') }}" />
+                                                            <x-input id="temp_inicial" class="block mt-1 w-full" type="text" name="temp_inicial" :value="$empaque->temp_inicial" autofocus autocomplete="temp_inicial" />
+                                                            <x-input-error for="temp_inicial" class="mt-2" />
+                                                        </div>
+
+                                                        <div class="block mb-2">
+                                                            <x-label for="temp_final" value="{{ __('°C Final') }}" />
+                                                            <x-input id="temp_final" class="block mt-1 w-full" type="text" name="temp_final" :value="$empaque->temp_final" autofocus autocomplete="temp_final" />
+                                                            <x-input-error for="temp_final" class="mt-2" />
+                                                        </div>
+
+                                                        <div class="block mb-2">
+                                                            <x-label for="H2O" value="{{ __('H2O') }}" />
+                                                            <x-input id="H2O" class="block mt-1 w-full" type="text" name="H2O" :value="$empaque->H2O" autofocus autocomplete="H2O" />
+                                                            <x-input-error for="H2O" class="mt-2" />
+                                                        </div>
+
+                                                        <div class="flex items-center justify-end mt-4">
+                                                            <x-button class="ml-4">
+                                                                {{ 'Actualizar Empaque' }}
+                                                            </x-button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     @else
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table id="cosechasTable" class="w-full text-sm text-center text-gray-500">
+                        <table id="empaquesTable" class="w-full text-sm text-center text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Cultivo
-                                    </th>
                                     <th scope="col" class="px-6 py-3">
                                         Número de Bolsas
                                     </th>
@@ -419,7 +588,7 @@
                             </thead>
                             <tbody>
                                 <tr class="bg-white border-b">
-                                    <td colspan="6" class="px-6 py-4 text-center">Todavía no hay registros el día de hoy.</td>
+                                    <td colspan="5" class="px-6 py-4 text-center">Todavía no hay registros el día de hoy.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -462,6 +631,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Llama a una función para actualizar la tabla con los nuevos datos
                 actualizarTabla(data.cosechas);
                 actualizarLista(data.tareas_diarias);
+                actualizarTablaEmpaques(data.empaques);
             })
             .catch(error => {
                 console.error('Error al realizar la solicitud AJAX:', error);
@@ -483,9 +653,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 fila.innerHTML = `
                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${cosecha.nombre}</td>
                     <td scope="row" class="px-6 py-4">${cosecha.num_botes}</td>
-                    <td class="px-6 py-4">${cosecha.invernadero !== null ? cosecha.invernadero : 'No Registrado'}</td>
+                    <td class="px-6 py-4">${cosecha.invernadero !== null ? cosecha.invernadero : '--'}</td>
                     <td class="px-6 py-4">${cosecha.num_cama}</td>
-                    <td class="px-6 py-4">${cosecha.corte !== null ? cosecha.corte : 'No Registrado'}</td>
+                    <td class="px-6 py-4">${cosecha.corte !== null ? cosecha.corte : '--'}</td>
                     <td scope="row" class="px-6 py-4">${cosecha.encargado}</td>
                 `;
                 tbody.appendChild(fila);
@@ -545,51 +715,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Función para actualizar la tabla "Empaques" con los datos
+    function actualizarTablaEmpaques(data) {
+        const tbody = document.querySelector('#empaquesTable tbody'); // Obtiene el tbody de la tabla
+
+        // Borra el contenido actual del tbody
+        tbody.innerHTML = '';
+
+        if (data.length > 0) {
+            // Si hay registros, llenar la tabla con los datos
+            data.forEach(empaque => {
+                const fila = document.createElement('tr');
+                fila.classList.add('bg-white', 'border-b');
+                fila.innerHTML = `
+                    <td scope="row" class="px-6 py-4">${empaque.num_bolsas !== null ? empaque.num_bolsas : '--'}</td>
+                    <td scope="row" class="px-6 py-4">${empaque.gramos !== null ? empaque.gramos : '--'}</td>
+                    <td class="px-6 py-4">${empaque.temp_inicial !== null ? empaque.temp_inicial : '--'}</td>
+                    <td class="px-6 py-4">${empaque.temp_final !== null ? empaque.temp_final : '--'}</td>
+                    <td class="px-6 py-4">${empaque.H2O !== null ? empaque.H2O : '--'}</td>
+                `;
+                tbody.appendChild(fila);
+            });
+        } else {
+            // Si no hay registros, mostrar el mensaje en una fila
+            const noRegistrosFila = document.createElement('tr');
+            noRegistrosFila.classList.add('bg-white', 'border-b');
+            noRegistrosFila.innerHTML = `
+                <td colspan="6" class="px-6 py-4 text-center">Todavía no hay registros para esta fecha.</td>
+            `;
+            tbody.appendChild(noRegistrosFila);
+        }
+    }
+
 });
-
-
-    /*<div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-    <br>
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">Actividades Diarias</h2>
-    <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-        <form id="formularioTareas" class="space-y-6" method="POST" action="{{ route('tareas-diarias-create') }}">
-            @csrf
-            <div class="flex items-center space-x-4">
-                <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" autofocus autocomplete="nombre" />
-                <x-input-error for="nombre" class="mt-2" />
-                <x-button class="ml-4">
-                    <i class="fa-solid fa-plus"></i>
-                </x-button>
-            </div>
-        </form><br>
-
-        <ol id="listaTareas" class="relative border-l border-gray-200 dark:border-gray-700">
-        @if ($tareas->count())
-            @foreach ($tareas as $index => $tarea)
-                <li class="ml-6">
-                    <span class="absolute flex items-center justify-center w-6 h-6 bg-green-100 rounded-full -left-3 ring-8 ring-white">
-                        <svg class="w-2.5 h-2.5 text-green-800 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <i class="fa-solid fa-check fa-sm"></i>&nbsp;
-                        </svg>
-                    </span>
-                    <h3 class="mb-1 text-md font-semibold text-gray-900">{{$tarea->nombre}}</h3>
-                    <time class="block mb-2 text-sm font-normal leading-none text-gray-400">&nbsp;</time>
-                </li>
-            @endforeach
-
-        @else
-            <li class="ml-6">
-                <span class="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-8 ring-white">
-                    <svg class="w-2.5 h-2.5 text-red-800 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <i class="fa-solid fa-face-frown fa-sm"></i>&nbsp;
-                    </svg>
-                </span>
-                <h3 class="mb-1 text-md font-semibold text-red-800">Todavía no hay actividades registradas.</h3>
-            </li>
-        @endif
-        </ol>
-    </div>
-
-    <br>
-    </div>*/
 </script>

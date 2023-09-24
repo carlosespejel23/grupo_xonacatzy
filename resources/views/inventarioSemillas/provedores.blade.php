@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">
         <div class="flex items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -12,11 +12,11 @@
             
             <div class="max-w-6xl mx-auto">
                 <x-button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
-                    Agregar Proveedor
+                    Agregar Proveedor&nbsp;&nbsp;<i class="fa-solid fa-plus"></i>
                 </x-button>  
             </div>
             
-            <!-- Main modal -->
+            <!-- Modal para agregar un proveedor -->
             <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                 <div class="relative w-full max-w-md max-h-full">
                     <!-- Modal content -->
@@ -31,7 +31,7 @@
                             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                                 Agregar Proveedor
                             </h2>
-                            <form class="space-y-6" method="POST" action="{{ route('administrador.provedor-create') }}">
+                            <form class="space-y-6" method="POST" action="{{ route('inventario.provedor-create') }}">
                                 @csrf
                                 <div class="block mb-2">
                                     <x-label for="nombre" value="{{ __('Name') }}" />
@@ -69,8 +69,10 @@
                             <th scope="col" class="px-6 py-3">
                                 Teléfono
                             </th>
+                            @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
                             <th scope="col" class="px-6 py-3">Editar</th>
                             <th scope="col" class="px-6 py-3">Eliminar</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -88,12 +90,14 @@
                                     No Registado
                                 </td>
                                 @endif
+                                @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
                                 <td class="px-6 py-4">
                                     <a data-modal-target="edit-modal-{{ $index }}" data-modal-toggle="edit-modal-{{ $index }}" class="font-medium text-blue-600 hover:underline">Editar</a>
                                 </td>                                
                                 <td class="px-6 py-4">
                                     <a data-modal-target="popup-modal-{{ $index }}" data-modal-toggle="popup-modal-{{ $index }}" class="font-medium text-red-600 hover:underline">Eliminar</a>
                                 </td>
+                                @endif
                             </tr>
 
                             <!-- Modal para eliminar un proveedor -->
@@ -106,7 +110,7 @@
                                             </svg>
                                             <span class="sr-only">Cancelar</span>
                                         </button>
-                                        <form method="POST" action="{{ route('administrador.provedor-delete', $provedor->id) }}">
+                                        <form method="POST" action="{{ route('inventario.provedor-delete', $provedor->id) }}">
                                             @csrf
                                             @method('DELETE')
                                             <div class="p-6 text-center">
@@ -132,7 +136,7 @@
                                             </svg>
                                             <span class="sr-only">Cancelar</span>
                                         </button>
-                                        <form method="POST" action="{{ route('administrador.provedor-update', $provedor->id) }}">
+                                        <form method="POST" action="{{ route('inventario.provedor-update', $provedor->id) }}">
                                             @csrf
                                             @method('PATCH')
                                             <div class="px-6 py-6 lg:px-8">
@@ -185,4 +189,4 @@
 
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

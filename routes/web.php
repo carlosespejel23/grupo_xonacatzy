@@ -37,9 +37,22 @@ Route::middleware([
     Route::get('/dashboard/{fecha}', [RADController::class, 'cosecha_consultar'])->name('cosecha-consultar');
     Route::post('/dashboard/tareas', [RADController::class, 'tareas_create'])->name('tareas-diarias-create');
     Route::patch('/dashboard/empaque/{id}', [RADController::class, 'empaques_update'])->name('empaques-update');
+    Route::post('/dashboard/combinado', [RADController::class, 'combinados_create'])->name('combinados-create');
 
     //Seccion "Inventario de Semillas (IDS)"
     Route::get('/inventario-semillas', [IDSController::class, 'index'])->name('inventario.index');
+    Route::post('/inventario-semillas/semillas', [IDSController::class, 'semilla_create'])->name('inventario.semilla-create');
+    Route::patch('/inventario-semillas/semillas/{id}', [IDSController::class, 'semilla_update'])->name('inventario.semilla-update');
+    Route::delete('/inventario-semillas/semillas/{id}', [IDSController::class, 'semilla_delete'])->name('inventario.semilla-delete');
+    Route::get('/inventario-semillas/semillas/provedores', [IDSController::class, 'provedor'])->name('inventario.provedor');
+    Route::post('/inventario-semillas/semillas/provedores', [IDSController::class, 'provedor_create'])->name('inventario.provedor-create');
+    Route::patch('/inventario-semillas/semillas/provedores/{id}', [IDSController::class, 'provedor_update'])->name('inventario.provedor-update');
+    Route::delete('/inventario-semillas/semillas/provedores/{id}', [IDSController::class, 'provedor_delete'])->name('inventario.provedor-delete');
+
+    Route::get('/inventario-semillas/semilla/{id}', [IDSController::class, 'registros'])->name('inventario.registros');
+    Route::post('/inventario-semillas/semilla/{id}', [IDSController::class, 'registro_create'])->name('inventario.registro-create');
+    Route::patch('/inventario-semillas/semilla/{id}', [IDSController::class, 'registro_update'])->name('inventario.registro-update');
+
 
     //Seccion "Dia de Ventas"
     Route::get('/dia-ventas', [DiaVentasController::class, 'index'])->name('diaVentas.index');
@@ -53,15 +66,6 @@ Route::middleware([
 
     //Panel de administrador "Seccion Usuarios" (Eliminar un usuario)
     Route::delete('/administrador/usuarios/{id}', [AdministradorController::class, 'usuario_delete'])->name('administrador.usuario-delete');
-
-    //Panel de administrador "Seccion Cultivos / Provedores"
-    Route::post('/administrador/cultivos', [AdministradorController::class, 'cultivo_create'])->name('administrador.cultivo-create');
-    Route::patch('/administrador/cultivos/{id}', [AdministradorController::class, 'cultivo_update'])->name('administrador.cultivo-update');
-    Route::delete('/administrador/cultivos/{id}', [AdministradorController::class, 'cultivo_delete'])->name('administrador.cultivo-delete');
-    Route::get('/administrador/cultivos/provedores', [AdministradorController::class, 'provedor'])->name('administrador.provedor');
-    Route::post('/administrador/cultivos/provedores', [AdministradorController::class, 'provedor_create'])->name('administrador.provedor-create');
-    Route::patch('/administrador/cultivos/provedores/{id}', [AdministradorController::class, 'provedor_update'])->name('administrador.provedor-update');
-    Route::delete('/administrador/cultivos/provedores/{id}', [AdministradorController::class, 'provedor_delete'])->name('administrador.provedor-delete');
 
     //Panel de administrador "Seccion Productos"
     Route::post('/administrador/productos', [AdministradorController::class, 'producto_create'])->name('administrador.producto-create');

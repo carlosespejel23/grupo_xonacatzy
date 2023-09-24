@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cultivos', function (Blueprint $table) {
+        Schema::create('cultivos_historial', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('provedor_id');
-            $table->foreign('provedor_id', 'fk_provedor_cultivo')->references('id')->on('provedores')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('nombre')->nullable();
+            $table->foreign('provedor_id', 'fk_provedor_cultivo_historial')->references('id')->on('provedores')->onDelete('restrict')->onUpdate('cascade');
+            $table->string('nombre');
             $table->string('nombre_tecnico')->nullable();
             $table->integer('cantidad');
             $table->date('fecha_ingreso');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cultivos');
+        Schema::dropIfExists('cultivos_historial');
     }
 };

@@ -21,9 +21,6 @@
                     <x-nav-link href="{{ route('administrador.usuarios') }}" :active="request()->routeIs('administrador.usuarios')">
                         {{ 'Usuarios' }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('administrador.cultivos') }}" :active="request()->routeIs('administrador.cultivos')">
-                        {{ 'Cultivos' }}
-                    </x-nav-link>
                     <x-nav-link href="{{ route('administrador.productos') }}" :active="request()->routeIs('administrador.productos')">
                         {{ 'Productos' }}
                     </x-nav-link>
@@ -114,9 +111,6 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('administrador.usuarios') }}" :active="request()->routeIs('administrador.usuarios')">
                 {{ 'Usuarios' }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('administrador.cultivos') }}" :active="request()->routeIs('administrador.cultivos')">
-                {{ 'Cultivos' }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('administrador.productos') }}" :active="request()->routeIs('administrador.productos')">
                 {{ 'Productos' }}

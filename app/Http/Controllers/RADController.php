@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cama_Cosecha;
+use App\Models\Combinado;
 use App\Models\Cosecha;
 use App\Models\Cultivo;
 use App\Models\Tarea_Diaria;
@@ -40,13 +41,13 @@ class RADController extends Controller
             ->orderBy('cosechas.created_at', 'asc')
             ->get();
 
-        //Consulta a la tabla empaques
+        //Consulta a la tabla empaques y combinados
         $empaques = DB::table('empaques')
             ->select(
                 'empaques.id',
                 'cultivos.nombre',
-                'empaques.num_bolsas',
-                'empaques.gramos',
+                DB::raw('COALESCE(CONCAT(empaques.num_bolsas, ", ", (SELECT MAX(combinados.num_bolsas) FROM combinados WHERE combinados.cultivo_id = empaques.cultivo_id)), empaques.num_bolsas) as num_bolsas'),
+                DB::raw('COALESCE(CONCAT(empaques.gramos, ", ", (SELECT MAX(combinados.gramos) FROM combinados WHERE combinados.cultivo_id = empaques.cultivo_id)), empaques.gramos) as gramos'),
                 'empaques.temp_inicial',
                 'empaques.temp_final',
                 'empaques.H2O',
@@ -88,7 +89,7 @@ class RADController extends Controller
         $cosecha->num_botes = $request->num_botes;
         $cosecha->invernadero = $request->invernadero;
         $cosecha->corte = $request->corte;
-        $cosecha->encargado = auth()->user()->nombre . ' ' . auth()->user()->apPaterno;
+        $cosecha->encargado = auth()->user()->nombre;
         $cosecha->fecha = $request->fecha;
     
         // Guardar el modelo, lo que automáticamente establecerá los timestamps
@@ -134,6 +135,23 @@ class RADController extends Controller
             ->orderBy('cosechas.created_at', 'asc')
             ->get();
 
+        //Consulta a la tabla empaques
+        $empaques = DB::table('empaques')
+            ->select(
+                'empaques.id',
+                'cultivos.nombre',
+                //AND combinados.fecha = empaques.fecha
+                DB::raw('COALESCE(CONCAT(empaques.num_bolsas, ", ", (SELECT MAX(combinados.num_bolsas) FROM combinados WHERE combinados.cultivo_id = empaques.cultivo_id AND combinados.fecha = empaques.fecha)), empaques.num_bolsas) as num_bolsas'),
+                DB::raw('COALESCE(CONCAT(empaques.gramos, ", ", (SELECT MAX(combinados.gramos) FROM combinados WHERE combinados.cultivo_id = empaques.cultivo_id AND combinados.fecha = empaques.fecha)), empaques.gramos) as gramos'),
+                'empaques.temp_inicial',
+                'empaques.temp_final',
+                'empaques.H2O',
+            )
+            ->join('cultivos', 'cultivos.id', '=', 'empaques.cultivo_id')
+            ->whereDate('empaques.fecha', '=', $fecha)
+            ->orderBy('empaques.created_at', 'asc')
+            ->get();
+
         // Consulta de tareas diarias
         $tareas = DB::table('tareas_diarias')
             ->select(
@@ -147,7 +165,8 @@ class RADController extends Controller
 
         return response()->json([
             'cosechas' => $cosechas,
-            'tareas_diarias' => $tareas
+            'tareas_diarias' => $tareas,
+            'empaques' => $empaques,
         ]);
     }
 
@@ -194,6 +213,47 @@ class RADController extends Controller
         ]);
     
         session()->flash('flash.banner', 'El registro se ha actualizado correctamente');
+        session()->flash('flash.bannerStyle', 'success');
+    
+        return redirect()->route('dashboard');
+    }
+
+    //Crear un registro de combinados
+    public function combinados_create(Request $request) {
+        $zonaHoraria = new DateTimeZone('America/Mexico_City');
+        $fechaActual = new DateTime('now', $zonaHoraria);
+        $fechaActualStr = $fechaActual->format('Y-m-d');
+
+        $validated = $request->validate([
+            'cultivo_id' => 'required',
+            'num_bolsas' => 'required|numeric',
+            'gramos' => 'required|numeric',
+        ]);
+
+        // Comprobar si ya existe un combinado con el mismo cultivo_id y fecha
+        $combinadoExistente = Combinado::where('cultivo_id', $request->cultivo_id)
+            ->where('fecha', $fechaActualStr)
+            ->first();
+
+        if ($combinadoExistente) {
+            // Si ya existe un combinado, muestra un mensaje de error y no guarda nada
+            session()->flash('flash.banner', 'El combinado no se puede registrar porque ya existe');
+            session()->flash('flash.bannerStyle', 'danger');
+        
+            return redirect()->route('dashboard');
+        }
+    
+        // Crear una nueva instancia del modelo Combinado
+        $combinado = new Combinado();
+        $combinado->cultivo_id = $request->cultivo_id;
+        $combinado->num_bolsas = $request->num_bolsas;
+        $combinado->gramos = $request->gramos;
+        $combinado->fecha = $fechaActualStr;
+    
+        // Guardar el modelo, lo que automáticamente establecerá los timestamps
+        $combinado->save();
+    
+        session()->flash('flash.banner', 'El combinado se ha creado correctamente');
         session()->flash('flash.bannerStyle', 'success');
     
         return redirect()->route('dashboard');
