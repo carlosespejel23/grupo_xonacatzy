@@ -53,9 +53,13 @@ Route::middleware([
     Route::post('/inventario-semillas/semilla/{id}', [IDSController::class, 'registro_create'])->name('inventario.registro-create');
     Route::patch('/inventario-semillas/semilla/{id}', [IDSController::class, 'registro_update'])->name('inventario.registro-update');
 
-
     //Seccion "Dia de Ventas"
     Route::get('/dia-ventas', [DiaVentasController::class, 'index'])->name('diaVentas.index');
+    Route::post('/dia-ventas/mercado', [DiaVentasController::class, 'mercado_create'])->name('diaVentas.mercado-create');
+    Route::delete('/dia-ventas/mercado/{id}', [DiaVentasController::class, 'mercado_delete'])->name('diaVentas.mercado-delete');
+    Route::post('/dia-ventas/cultivo', [DiaVentasController::class, 'ventas_create'])->name('diaVentas.ventas_create');
+    Route::post('/dia-ventas/gastos', [DiaVentasController::class, 'gastos_create'])->name('diaVentas.gastos_create');
+    Route::get('/dia-ventas/gastosTotal/{fecha}', [DiaVentasController::class, 'consultar_datos'])->name('diaVentas.consultar-datos');
 
     //Panel de administrador (navbar)
     Route::get('/administrador', [AdministradorController::class, 'index'])->name('administrador.index');

@@ -204,7 +204,7 @@
                                         {{ $cultivo->encargado }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        <a data-modal-target="create-modal-{{ $index }}" data-modal-toggle="create-modal-{{ $index }}"><i class="fa-solid fa-file-export"></i></a>
+                                        <a data-modal-target="create-modal-{{ $index }}" data-modal-toggle="create-modal-{{ $index }}"><i class="fa-solid fa-arrow-right-to-bracket fa-xl" style="color: #099f13;"></i></a>
                                     </td>
                                 </tr>
 
