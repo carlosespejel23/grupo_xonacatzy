@@ -12,30 +12,6 @@ use Illuminate\Support\Facades\DB;
 //Controlador de todas la acciones del administrador
 class AdministradorController extends Controller
 {
-    //Renderiza el panel principal del administrador
-    public function index(Request $request) {
-        $userId = $request->user()->id;
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            return view('administrador.admin');
-        } else {
-            return view('dashboard');
-        }
-    }
-
-    //Rederiza la seccion de ventas
-    public function ventas(Request $request) {
-        $userId = $request->user()->id;
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            return view('administrador.ventas');
-        } else {
-            return view('dashboard');
-        }
-    }
-
     //Rederiza la seccion de usuarios
     public function usuarios(Request $request) {
         $userId = $request->user()->id;
@@ -109,23 +85,5 @@ class AdministradorController extends Controller
         session()->flash('flash.bannerStyle', 'success');
 
         return redirect()->route('administrador.productos');
-    }
-
-    //Eliminar un producto
-    public function producto_delete($id) {
-        $producto = DB::table('productos')->where('id', $id);
-        try {
-            $producto->delete();
-
-            session()->flash('flash.banner', 'El producto se ha eliminado correctamente');
-            session()->flash('flash.bannerStyle', 'success');
-
-            return redirect()->route('administrador.productos');
-        } catch (\Throwable $th) {
-            session()->flash('flash.banner', 'No puede eliminar el producto porque esta registrado en las ventas');
-            session()->flash('flash.bannerStyle', 'danger');
-
-            return redirect()->route('administrador.productos');
-        }
     }
 }

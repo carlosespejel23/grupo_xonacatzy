@@ -1,22 +1,21 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">
         <div class="flex items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ 'Estadísticas de Venta' }}
-            </h2>
+            @foreach ($cultivos as $index => $cultivo)
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ 'Estadísticas de venta de ' }}{{ $cultivo->nombre }}&nbsp;&nbsp;
+                </h2>
+                @if($cultivo->nombre_tecnico !== null)
+                <h2 class="text-xl text-gray-800 leading-tight">
+                    ({{ $cultivo->nombre_tecnico }}) &nbsp;&nbsp;
+                </h2>
+                @endif
+            @endforeach
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <!-- Descripcion de las estadisticas de venta de todos los Cultivos -->
-            <center>
-                <h3 class="text-lg font-medium text-gray-900">
-                    {{ __('Venta de Cultivos') }}
-                </h3>
-            </center><br>
-
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 
                 @if(!empty($ventas) && !empty($rangosFechas))
@@ -100,7 +99,7 @@
                 
                 <script>
                     // JSON de los datos mandados a blade
-                    var cultivos = @json($cultivos);
+                    var mercados = @json($mercados);
                     var ventas = @json($ventas);
                     var rangosFechas = @json($rangosFechas);
                 
@@ -131,28 +130,31 @@
                     }
 
                     // Crea un array para almacenar los datos de la serie
-                    var cultivosData = [];
+                    var mercadosData = [];
 
-                    // Itera sobre los cultivos y agrega datos a seriesData
-                    cultivos.forEach(function (cultivo, index) {
+                    // Itera sobre los mercados y agrega datos a seriesData
+                    mercados.forEach(function (mercado, index) {
                         var colorPastel = generarColorPastelAleatorio();
-                        var datosVentas = ventas[index]; // Obtén los datos de ventas específicos para este cultivo
-                        cultivosData.push({
-                            name: cultivo.nombre,
+                        var datosVentas = ventas[index]; // Obtén los datos de ventas específicos para este mercado
+                        mercadosData.push({
+                            name: mercado.nombre,
                             data: datosVentas,
                             color: colorPastel,
                         });
                     });
                     
-                    inicializarGrafico(cultivosData, rangosFechas);
+                    inicializarGrafico(mercadosData, rangosFechas);
                 
                     // Obtén una referencia al botón de consulta por su ID
                     const consulta1 = document.getElementById('consulta1'); //Consulta de los últimos 12 meses
                     const consulta2 = document.getElementById('consulta2'); //Consulta de un rango de fecha especifico
+
+                    // Obtén los IDs de los cultivos en un array de JavaScript
+                    var id = @json($cultivos->pluck('id')->toArray());
                 
                     // Agrega un evento click a los botones de la consulta1
                     consulta1.addEventListener('click', function () {
-                        actualizarGrafico(`/administrador/semillas/meses`);
+                        actualizarGrafico(`/inventario-semillas/estadistica/semilla/meses/${id}`);
                     });
 
                     // Agrega un evento click a los botones de la consulta2
@@ -164,10 +166,10 @@
                         fechaInicio = fechaInicial_value.replace(/\//g, '-');
                         fechaFin = fechaFinal_value.replace(/\//g, '-');
 
-                        actualizarGrafico(`/administrador/semillas/fecha1/${fechaInicio}/fecha2/${fechaFin}`);
+                        actualizarGrafico(`/inventario-semillas/estadistica/semilla/${id}/fecha1/${fechaInicio}/fecha2/${fechaFin}`);
                     });
 
-                    function inicializarGrafico(cultivosData, fechasData) {
+                    function inicializarGrafico(mercadosData, fechasData) {
                         // Crea el nuevo gráfico con los datos
                         const options = {
                             // set the labels option to true to show the labels on the X and Y axis
@@ -201,7 +203,7 @@
                                     }
                                 }
                             },
-                            series: cultivosData,
+                            series: mercadosData,
                             chart: {
                                 sparkline: {
                                     enabled: false
@@ -263,33 +265,33 @@
                                 // Maneja la respuesta del controlador aquí
                                 console.log(data); // Aquí puedes ver los datos devueltos por el controlador
 
-                                rangosFechas = data[1];
-                                ventas = data[2];
+                                rangosFechas = data[2];
+                                ventas = data[3];
 
-                                // Actualiza los datos en cultivosData con los nuevos datos
-                                let cultivosData = [];
+                                // Actualiza los datos en mercadosData con los nuevos datos
+                                let mercadosData = [];
 
-                                cultivos.forEach(function (cultivo, index) {
+                                mercados.forEach(function (mercado, index) {
                                     var colorPastel = generarColorPastelAleatorio();
                                     var datosVentas = ventas[index]; // Nuevos datos obtenidos de la solicitud
-                                    cultivosData.push({
-                                        name: cultivo.nombre,
+                                    mercadosData.push({
+                                        name: mercado.nombre,
                                         data: datosVentas,
                                         color: colorPastel,
                                     });
                                 });
 
                                 // Inicializa el gráfico con los nuevos datos
-                                inicializarGrafico(cultivosData, rangosFechas);
+                                inicializarGrafico(mercadosData, rangosFechas);
                             })
                             .catch(error => {
                                 console.error('Error al realizar la solicitud AJAX:', error);
                             });
                     }
-                </script> 
+                </script>                
+  
 
             </div>
-
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

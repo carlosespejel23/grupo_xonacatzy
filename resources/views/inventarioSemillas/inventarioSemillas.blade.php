@@ -43,8 +43,9 @@
                             <form class="space-y-6" method="POST" action="{{ route('inventario.semilla-create') }}">
                                 @csrf
                                 <div class="block mb-2">
-                                    <label for="provedor_id" class="text-sm font-medium text-gray-900">Proveedor</label>
+                                    <label for="provedor_id" class="text-sm font-medium text-gray-900">Proveedor *</label>
                                     <select id="provedor_id" name="provedor_id" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
+                                        <option selected>Elige un <strong>Proveedor</strong></option>
                                         @foreach ($provedores as $provedor)
                                         <option value="{{ $provedor->id }}">{{ $provedor->nombre }}</option>
                                         @endforeach
@@ -53,13 +54,13 @@
                                 </div>
 
                                 <div class="block mb-2">
-                                    <x-label for="encargado" value="{{ __('¿Quién recibió?') }}" />
+                                    <x-label for="encargado" value="{{ __('¿Quién recibió? *') }}" />
                                     <x-input id="encargado" class="block mt-1 w-full" type="text" name="encargado" :value="old('encargado')" required autofocus autocomplete="encargado" />
                                     <x-input-error for="encargado" class="mt-2" />
                                 </div>
 
                                 <div class="block mb-2">
-                                    <x-label for="nombre" value="{{ __('Name') }}" />
+                                    <x-label for="nombre" value="{{ __('Nombre *') }}" />
                                     <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="nombre" />
                                     <x-input-error for="nombre" class="mt-2" />
                                 </div>
@@ -71,7 +72,7 @@
                                 </div>
     
                                 <div class="block mb-2">
-                                    <x-label for="cantidad" value="{{ __('Cantidad (gramos)') }}" />
+                                    <x-label for="cantidad" value="{{ __('Cantidad (gramos) *') }}" />
                                     <x-input id="cantidad" class="block mt-1 w-full" type="text" name="cantidad" :value="old('cantidad')" required autofocus autocomplete="cantidad" />
                                     <x-input-error for="cantidad" class="mt-2" />
                                 </div>
@@ -83,14 +84,14 @@
                                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                                         </svg>
                                         </div>
-                                        <input datepicker id="fecha_ingreso" name="fecha_ingreso" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5" placeholder="Fecha de Ingreso">
+                                        <input datepicker id="fecha_ingreso" name="fecha_ingreso" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5" placeholder="Fecha de Ingreso (obligatorio)">
                                         <x-input-error for="fecha_ingreso" class="mt-2" />
                                     </div>
                                 </div>
                     
                                 <div class="flex items-center justify-end mt-4">
                                     <x-button class="ml-4">
-                                        {{ 'Registrar Cultivo' }}
+                                        {{ 'Registrar Semilla' }}
                                     </x-button>
                                 </div>
                             </form>
@@ -108,12 +109,32 @@
                         <a href="{{ route('inventario.registros', $cultivo->id) }}">
                             <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{$cultivo->nombre}}</h2><br>
                         </a>
-                        <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
-                            Detalles
-                            <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </a>
+
+                        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                            <div class="flex items-center" style="margin-left: 5px; justify-content: center;">
+                                <div class="block mt-1 w-2/4">
+                                    <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                        Detalles
+                                        <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="block mt-1 w-2/4">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                Detalles
+                                <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </a>
+                        @endif
+
                     </div>
                     @endforeach
                 @endif

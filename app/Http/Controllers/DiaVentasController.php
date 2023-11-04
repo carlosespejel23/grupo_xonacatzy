@@ -77,9 +77,10 @@ class DiaVentasController extends Controller
             $totalVentas = $totalVentasCultivos + $totalVentasProductos;
 
             //Consulta a los mercados
-            $mercados = Mercado::all();
-            $cultivos = Cultivo::all();
-            $productos = Producto::all();
+            $mercados = Mercado::orderBy('nombre', 'asc')->get();
+            //Consulta a los cultivos
+            $cultivos = Cultivo::orderBy('nombre', 'asc')->get();
+            $productos = Producto::orderBy('nombre', 'asc')->get();
 
             return view('diaVentas.diaVentas', compact('mercados', 'cultivos', 'productos', 'ventas_cultivos', 'ventas_productos', 'gastos_extras', 'totalVentas', 'totalGastosExtra'));
         } else {
@@ -104,24 +105,6 @@ class DiaVentasController extends Controller
             $mercado->save();
     
             session()->flash('flash.banner', 'El mercado se ha registrado correctamente');
-            session()->flash('flash.bannerStyle', 'success');
-
-            return redirect()->route('diaVentas.index');
-        } else {
-            return view('dashboard');
-        }
-    }
-
-    //Eliminar un registro en Mercados
-    public function mercado_delete(Request $request, $id) {
-        $userId = $request->user()->id;
-
-        // Verifica si el rol del usuario es'Administrador'
-        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
-            $mercado = Mercado::findOrFail($id);
-            $mercado->delete();
-
-            session()->flash('flash.banner', 'El mercado se ha eliminado correctamente');
             session()->flash('flash.bannerStyle', 'success');
 
             return redirect()->route('diaVentas.index');
@@ -183,7 +166,7 @@ class DiaVentasController extends Controller
                 }
             } catch (\Exception $e) {
                 // Capturamos la excepción y mostramos un mensaje de error
-                session()->flash('flash.banner', $e->getMessage());
+                session()->flash('flash.banner', 'La fecha de ventas es nula o algún campo esta vacío.');
                 session()->flash('flash.bannerStyle', 'error');
 
                 // Redirigimos de nuevo al formulario o a donde quieras

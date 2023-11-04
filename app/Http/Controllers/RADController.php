@@ -67,7 +67,7 @@ class RADController extends Controller
             ->get();
 
         //Consulta a los cultivos
-        $cultivos = Cultivo::all();
+        $cultivos = Cultivo::orderBy('nombre', 'asc')->get();
 
         return view('dashboard', compact('cultivos', 'cosechas', 'tareas', 'empaques'));
     }

@@ -19,4 +19,10 @@ class Registro extends Model
         'encargado2',
         'responsable'
     ];
+
+    //Relacion a tabla provedores
+    public function provedor()
+    {
+        return $this->belongsTo(Provedor::class, 'provedor_id'); // 'provedor_id' debe ser el nombre del campo de clave foránea en la tabla 'cultivos'.
+    }
 }

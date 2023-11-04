@@ -64,8 +64,9 @@
                                         @csrf
                                     
                                         <div class="block mb-2">
-                                            <label for=" cultivo_id" class="text-sm font-medium text-gray-900">Cultivo</label>
+                                            <label for=" cultivo_id" class="text-sm font-medium text-gray-900">Cultivo *</label>
                                             <select id=" cultivo_id" name=" cultivo_id" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
+                                                <option selected>Elige un <strong>Cultivo</strong></option>
                                                 @foreach ($cultivos as $cultivo)
                                                 <option value="{{ $cultivo->id }}">{{ $cultivo->nombre }}</option>
                                                 @endforeach
@@ -74,7 +75,7 @@
                                         </div>
                                     
                                         <div class="block mb-2">
-                                            <x-label for="num_botes" value="{{ __('Número de Botes')}}" />
+                                            <x-label for="num_botes" value="{{ __('Número de Botes *')}}" />
                                             <x-input id="num_botes" class="block mt-1 w-full" type="text" name="num_botes" value="0" min="0" required autofocus autocomplete="num_botes" />
                                             <input id="range_botes" name="range_botes" type="range" min="0" max="0.99" value="0" step="0.25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                                             <span id="range_botes_value" class="text-sm mt-1">0</span>
@@ -115,14 +116,14 @@
                                     
                                         <div class="block mb-2">
                                             <x-label for="invernadero" value="{{ __('Número de Invernadero (Opcional)') }}" />
-                                            <x-input id="invernadero" class="block mt-1 w-full" type="number" name="invernadero" :value="old('invernadero')" min="0" autofocus autocomplete="invernadero" />
+                                            <x-input id="invernadero" class="block mt-1 w-full" type="number" name="invernadero" :value="old('invernadero')" min="0" placeholder='0' autofocus autocomplete="invernadero" />
                                             <x-input-error for="invernadero" class="mt-2" />
                                         </div>
                                     
                                         <div class="block mb-2">
                                             <div id="num_camas_section">
                                                 <div class="block mb-2">
-                                                    <x-label for="num_cama[]" value="{{ __('Número de Cama') }}" />
+                                                    <x-label for="num_cama[]" value="{{ __('Número de Cama (Opcional)') }}" />
                                                     <x-input id="num_cama" class="block mt-1 w-full" type="number" name="num_cama[]" min="0" value="0" required autofocus autocomplete="num_cama" />
                                                     <x-input-error for="num_cama" class="mt-2" />
                                                 </div>
@@ -155,7 +156,7 @@
                                     
                                         <div class="block mb-2">
                                             <x-label for="corte" value="{{ __('Número de Corte (Opcional)') }}" />
-                                            <x-input id="corte" class="block mt-1 w-full" type="number" name="corte" :value="old('corte')" min="0" autofocus autocomplete="corte" />
+                                            <x-input id="corte" class="block mt-1 w-full" type="number" name="corte" :value="old('corte')" min="0" placeholder='0' autofocus autocomplete="corte" />
                                             <x-input-error for="corte" class="mt-2" />
                                         </div>
                                         
@@ -166,7 +167,7 @@
                                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                                                 </svg>
                                                 </div>
-                                                <input datepicker id="fecha" name="fecha" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5" placeholder="Fecha de Registro">
+                                                <input datepicker id="fecha" name="fecha" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5" placeholder="Fecha de Registro (obligatorio)">
                                                 <x-input-error for="fecha" class="mt-2" />
                                             </div>
                                         </div>
@@ -198,7 +199,7 @@
                                         Cultivo
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        No. de Botes
+                                        No. Botes
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Invernadero
@@ -262,7 +263,7 @@
                                         Cultivo
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        No. de Botes
+                                        No. Botes
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Invernadero
@@ -297,7 +298,7 @@
                     <div class="max-w-6xl mx-auto">
                         <div class="flex items-center space-x-4">
                             <button data-modal-target="combinado-modal" data-modal-toggle="combinado-modal" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 mr-2 mb-2 focus:outline-none">
-                                Agregar Combinado
+                                Agregar Combinado&nbsp;&nbsp;<i class="fa-solid fa-angles-down"></i>
                             </button>
                         </div>
                     </div>                                        
@@ -321,8 +322,9 @@
                                     <form class="space-y-6" method="POST" action="{{ route('combinados-create') }}">
                                         @csrf
                                         <div class="block mb-2">
-                                            <label for=" cultivo_id" class="text-sm font-medium text-gray-900">Escoger Cultivo</label>
+                                            <label for=" cultivo_id" class="text-sm font-medium text-gray-900">Escoger Cultivo *</label>
                                             <select id=" cultivo_id" name=" cultivo_id" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
+                                                <option selected>Elige un <strong>Cultivo</strong></option>
                                                 @foreach ($cultivos as $cultivo)
                                                 <option value="{{ $cultivo->id }}">{{ $cultivo->nombre }}</option>
                                                 @endforeach
@@ -331,13 +333,13 @@
                                         </div>
         
                                         <div class="block mb-2">
-                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas') }}" />
-                                            <x-input id="num_bolsas" class="block mt-1 w-full" type="number" name="num_bolsas" :value="old('num_bolsas')" autofocus autocomplete="num_bolsas" />
+                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas *') }}" />
+                                            <x-input id="num_bolsas" class="block mt-1 w-full" type="number" name="num_bolsas" :value="old('num_bolsas')"  autofocus autocomplete="num_bolsas" />
                                             <x-input-error for="num_bolsas" class="mt-2" />
                                         </div>
             
                                         <div class="block mb-2">
-                                            <x-label for="gramos" value="{{ __('Gramos') }}" />
+                                            <x-label for="gramos" value="{{ __('Gramos *') }}" />
                                             <x-input id="gramos" class="block mt-1 w-full" type="number" name="gramos" :value="old('gramos')" required autofocus autocomplete="gramos" />
                                             <x-input-error for="gramos" class="mt-2" />
                                         </div>
@@ -520,31 +522,31 @@
                                                             {{$empaque->nombre}}
                                                         </h2><br>
                                                         <div class="block mb-2">
-                                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas') }}" />
+                                                            <x-label for="num_bolsas" value="{{ __('Número de Bolsas (Opcional)') }}" />
                                                             <x-input id="num_bolsas" class="block mt-1 w-full" type="text" name="num_bolsas" :value="$empaque->num_bolsas" autofocus autocomplete="num_bolsas" />
                                                             <x-input-error for="num_bolsas" class="mt-2" />
                                                         </div>
                         
                                                         <div class="block mb-2">
-                                                            <x-label for="gramos" value="{{ __('Gramos') }}" />
+                                                            <x-label for="gramos" value="{{ __('Gramos (Opcional)') }}" />
                                                             <x-input id="gramos" class="block mt-1 w-full" type="text" name="gramos" :value="$empaque->gramos" autofocus autocomplete="gramos" />
                                                             <x-input-error for="gramos" class="mt-2" />
                                                         </div>
                             
                                                         <div class="block mb-2">
-                                                            <x-label for="temp_inicial" value="{{ __('°C Inicial') }}" />
+                                                            <x-label for="temp_inicial" value="{{ __('°C Inicial (Opcional)') }}" />
                                                             <x-input id="temp_inicial" class="block mt-1 w-full" type="text" name="temp_inicial" :value="$empaque->temp_inicial" autofocus autocomplete="temp_inicial" />
                                                             <x-input-error for="temp_inicial" class="mt-2" />
                                                         </div>
 
                                                         <div class="block mb-2">
-                                                            <x-label for="temp_final" value="{{ __('°C Final') }}" />
+                                                            <x-label for="temp_final" value="{{ __('°C Final (Opcional)') }}" />
                                                             <x-input id="temp_final" class="block mt-1 w-full" type="text" name="temp_final" :value="$empaque->temp_final" autofocus autocomplete="temp_final" />
                                                             <x-input-error for="temp_final" class="mt-2" />
                                                         </div>
 
                                                         <div class="block mb-2">
-                                                            <x-label for="H2O" value="{{ __('H2O') }}" />
+                                                            <x-label for="H2O" value="{{ __('H2O (Opcional)') }}" />
                                                             <x-input id="H2O" class="block mt-1 w-full" type="text" name="H2O" :value="$empaque->H2O" autofocus autocomplete="H2O" />
                                                             <x-input-error for="H2O" class="mt-2" />
                                                         </div>

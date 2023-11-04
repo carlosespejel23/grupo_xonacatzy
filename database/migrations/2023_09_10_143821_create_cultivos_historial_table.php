@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('cultivos_historial', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cultivo_id');
+            $table->foreign('cultivo_id', 'fk_cultivo_historial')->references('id')->on('cultivos')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('provedor_id');
             $table->foreign('provedor_id', 'fk_provedor_cultivo_historial')->references('id')->on('provedores')->onDelete('restrict')->onUpdate('cascade');
             $table->string('nombre');

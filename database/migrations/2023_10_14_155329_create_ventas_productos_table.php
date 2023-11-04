@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('mercado_id');
             $table->foreign('mercado_id')->references('id')->on('mercados')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('producto_id')->nullable();
-            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('restrict')->onUpdate('restrict');
             $table->integer('cantidad');
             $table->date('fecha');
             $table->timestamps();

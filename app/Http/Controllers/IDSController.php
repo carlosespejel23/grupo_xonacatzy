@@ -66,25 +66,6 @@ class IDSController extends Controller
         return redirect()->route('inventario.registros', $id);
     }
 
-    //Elimina una Semilla
-    public function semilla_delete($id) {
-        $cultivo = DB::table('cultivos')->where('id', $id);
-
-        try {
-            $cultivo->delete();
-
-            session()->flash('flash.banner', 'La semilla se ha eliminado correctamente');
-            session()->flash('flash.bannerStyle', 'success');
-
-            return redirect()->route('inventario.index');
-        } catch (\Throwable $th) {
-            session()->flash('flash.banner', 'No puede eliminar la semilla porque esta registrada en otras secciones');
-            session()->flash('flash.bannerStyle', 'danger');
-
-            return redirect()->route('inventario.index');
-        }
-    }
-
     //Rederiza la seccion de provedores
     public function provedor(Request $request) {
         $provedores = Provedor::all();
@@ -130,40 +111,19 @@ class IDSController extends Controller
         return redirect()->route('inventario.provedor');
     }
 
-    //Elimina un provedor
-    public function provedor_delete($id) {
-        $provedor = DB::table('provedores')->where('id', $id);
-        try {
-            $provedor->delete();
-
-            session()->flash('flash.banner', 'El proveedor se ha eliminado correctamente');
-            session()->flash('flash.bannerStyle', 'success');
-
-            return redirect()->route('administrador.provedor');
-        } catch (\Throwable $th) {
-            session()->flash('flash.banner', 'No puede eliminar el proveedor porque esta registrado en el inventario de semillas');
-            session()->flash('flash.bannerStyle', 'danger');
-
-            return redirect()->route('inventario.provedor');
-        }
-    }
-
     //Renderiza la vista de Registros
     public function registros($id) {
         // Obtener registros del modelo Cultivo
         $cultivos = Cultivo::where('id', $id)->get();
         // Obtener registros del modelo Cultivo_Historial
-        $historiales = Cultivo_Historial::where('id', $id)->get();
-        // Combina los resultados de ambas consultas en una sola colección
-        $resultados = $cultivos->concat($historiales);
-        $cultivos = Cultivo::where('id', '=', $id)->get();
-        //$registros = Registro::where('cultivo_id', '=', $id)->get();
+        $historiales = Cultivo_Historial::where('cultivo_id', $id)->get();
+        // Obtener registros del modelo Provedor
         $provedores = Provedor::all();
 
         $registros = DB::table('registros')
         ->select(
             'registros.id',
-            'registros.provedor_id',
+            'provedores.nombre as provedor',
             'registros.cultivo_id',
             'registros.fecha_salida',
             'registros.cantidad',
@@ -172,12 +132,12 @@ class IDSController extends Controller
             'registros.encargado',
         )
         ->join('cultivos', 'cultivos.id', '=', 'registros.cultivo_id')
-        //>join('cultivos_historial', 'cultivos_historial.id', '=', 'registros.cultivo_id')
+        ->join('provedores', 'provedores.id', '=', 'registros.provedor_id')
         ->where('registros.cultivo_id', '=', $id)
         ->orderBy('registros.created_at', 'asc')
         ->get();
 
-        return view('inventarioSemillas.registros', compact('cultivos', 'registros', 'provedores', 'resultados'));
+        return view('inventarioSemillas.registros', compact('cultivos', 'registros', 'provedores', 'historiales'));
     }
 
     //Crear un registro

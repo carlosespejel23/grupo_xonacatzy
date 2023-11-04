@@ -13,16 +13,16 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link href="{{ route('administrador.index') }}" :active="request()->routeIs('administrador.index')">
-                        {{ 'Estadísticas' }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('administrador.ventas') }}" :active="request()->routeIs('administrador.ventas')">
-                        {{ 'Ventas' }}
+                        {{ 'Estadísticas de Venta' }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('administrador.usuarios') }}" :active="request()->routeIs('administrador.usuarios')">
                         {{ 'Usuarios' }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('administrador.productos') }}" :active="request()->routeIs('administrador.productos')">
                         {{ 'Productos' }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('administrador.eliminar-datos') }}" :active="request()->routeIs('administrador.eliminar-datos')">
+                        {{ 'Eliminar Información' }}
                     </x-nav-link>
                 </div>
             </div>
@@ -104,16 +104,16 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('administrador.index') }}" :active="request()->routeIs('administrador.index')">
-                {{ 'Estadísticas' }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('administrador.ventas') }}" :active="request()->routeIs('administrador.ventas')">
-                {{ 'Ventas' }}
+                {{ 'Estadísticas de Venta' }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('administrador.usuarios') }}" :active="request()->routeIs('administrador.usuarios')">
                 {{ 'Usuarios' }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('administrador.productos') }}" :active="request()->routeIs('administrador.productos')">
                 {{ 'Productos' }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('administrador.eliminar-datos') }}" :active="request()->routeIs('administrador.eliminar-datos')">
+                {{ 'Eliminar Información' }}
             </x-responsive-nav-link>
         </div>
 

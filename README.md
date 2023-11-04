@@ -8,6 +8,7 @@ CREATE TRIGGER `cultivos_after_update` AFTER UPDATE ON `cultivos`
  FOR EACH ROW BEGIN
   INSERT INTO cultivos_historial
   SET
+    cultivo_id = OLD.id,
     provedor_id = OLD.provedor_id,
     nombre = OLD.nombre,
     nombre_tecnico = OLD.nombre_tecnico,

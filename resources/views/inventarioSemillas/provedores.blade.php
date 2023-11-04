@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ 'Proveedores' }}
+                {{ 'Proveedores' }}&nbsp;&nbsp;<i class="fa-solid fa-truck-field"></i>
             </h2>
         </div>
     </x-slot>
@@ -34,7 +34,7 @@
                             <form class="space-y-6" method="POST" action="{{ route('inventario.provedor-create') }}">
                                 @csrf
                                 <div class="block mb-2">
-                                    <x-label for="nombre" value="{{ __('Name') }}" />
+                                    <x-label for="nombre" value="{{ __('Nombre *') }}" />
                                     <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="nombre" />
                                 </div>
     
@@ -56,7 +56,7 @@
             
             <br>
 
-            <!-- Tabla de usuarios -->
+            <!-- Tabla de proveedores -->
             @if ($provedores->count())
             
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -71,7 +71,6 @@
                             </th>
                             @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
                             <th scope="col" class="px-6 py-3">Editar</th>
-                            <th scope="col" class="px-6 py-3">Eliminar</th>
                             @endif
                         </tr>
                     </thead>
@@ -93,38 +92,9 @@
                                 @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
                                 <td class="px-6 py-4">
                                     <a data-modal-target="edit-modal-{{ $index }}" data-modal-toggle="edit-modal-{{ $index }}" class="font-medium text-blue-600 hover:underline">Editar</a>
-                                </td>                                
-                                <td class="px-6 py-4">
-                                    <a data-modal-target="popup-modal-{{ $index }}" data-modal-toggle="popup-modal-{{ $index }}" class="font-medium text-red-600 hover:underline">Eliminar</a>
                                 </td>
                                 @endif
                             </tr>
-
-                            <!-- Modal para eliminar un proveedor -->
-                            <div id="popup-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative w-full max-w-md max-h-full">
-                                    <div class="relative bg-white rounded-lg shadow">
-                                        <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal-{{ $index }}">
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                            </svg>
-                                            <span class="sr-only">Cancelar</span>
-                                        </button>
-                                        <form method="POST" action="{{ route('inventario.provedor-delete', $provedor->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <div class="p-6 text-center">
-                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                </svg>
-                                                <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar este provedor?</h3>
-                                                <x-button type="submit">Si, estoy seguro</x-button>
-                                                <x-secondary-button data-modal-hide="popup-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
-                                            </div>
-                                        </form>                                        
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Modal para editar un proveedor -->
                             <div id="edit-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -145,7 +115,7 @@
                                                 </h2><br>
                                                 <div class="block mb-2">
                                                     <x-label for="nombre" value="{{ __('Nombre') }}" />
-                                                    <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="$provedor->nombre" required autofocus />
+                                                    <x-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="$provedor->nombre" required autofocus disabled />
                                                 </div>
                                                 <div class="block mb-2">
                                                     <x-label for="telefono" value="{{ __('Teléfono (opcional)') }}" />

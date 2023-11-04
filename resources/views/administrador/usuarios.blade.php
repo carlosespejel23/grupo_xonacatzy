@@ -12,7 +12,7 @@
 
             <div class="max-w-6xl mx-auto">
                 <x-button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
-                    Agregar Usuario
+                    Agregar Usuario&nbsp;&nbsp;<i class="fa-solid fa-user-plus"></i>
                 </x-button>  
             </div>
             
