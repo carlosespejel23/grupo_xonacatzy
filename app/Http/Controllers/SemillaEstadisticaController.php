@@ -59,14 +59,9 @@ class SemillaEstadisticaController extends Controller
                         ->where('ventas_cultivos.mercado_id', '=', $mercado->id) // Filtra por el mercado actual
                         ->whereDate('ventas_cultivos.fecha', '>=', $startOfWeek)
                         ->whereDate('ventas_cultivos.fecha', '<=', $endOfWeek)
-                        ->groupBy(DB::raw('YEARWEEK(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasMercado[] = $sumaMonto;
                     $today->subWeek();
@@ -140,14 +135,9 @@ class SemillaEstadisticaController extends Controller
                         ->where('ventas_cultivos.mercado_id', '=', $mercado->id) // Filtra por el mercado actual
                         ->whereDate('ventas_cultivos.fecha', '>=', $startOfMonth)
                         ->whereDate('ventas_cultivos.fecha', '<=', $endOfMonth)
-                        ->groupBy(DB::raw('MONTH(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasMercado[] = $sumaMonto;
                     $startOfMonth->subMonth();
@@ -214,14 +204,9 @@ class SemillaEstadisticaController extends Controller
                         ->where('ventas_cultivos.mercado_id', '=', $mercado->id)
                         ->whereDate('ventas_cultivos.fecha', '>=', $parteInicio)
                         ->whereDate('ventas_cultivos.fecha', '<', $parteFin)
-                        ->groupBy(DB::raw('YEAR(ventas_cultivos.fecha), MONTH(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasMercado[] = $sumaMonto;
                 }

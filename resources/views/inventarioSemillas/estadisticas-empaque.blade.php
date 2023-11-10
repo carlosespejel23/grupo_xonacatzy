@@ -3,17 +3,17 @@
         <div class="flex items-center">
             @foreach ($cultivos as $index => $cultivo)
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ 'Estadísticas de venta de ' }}{{ $cultivo->nombre }}&nbsp;&nbsp;
+                    {{ 'Estadísticas de empaquetado de ' }}{{ $cultivo->nombre }}&nbsp;&nbsp;
                 </h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     
                 <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400">
                     <li class="mr-2">
-                        <a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-block px-4 py-3 text-white {{ request()->is('inventario.estadisticas*', $cultivo->id) ? '' : 'bg-green-700' }} rounded-lg" aria-current="page">Ventas</a>
+                        <a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-block px-4 py-3 text-white {{ request()->is('inventario.estadisticas*', $cultivo->id) ? '' : 'bg-gray-400' }} rounded-lg" aria-current="page">Ventas</a>
                     </li>
                 </ul>
                 <ul class="flex flex-wrap text-sm font-medium text-center">
                     <li class="mr-2">
-                        <a href="{{ route('inventario.estadisticas-empaque', $cultivo->id) }}" class="inline-block px-4 py-3 text-white {{ request()->is('inventario.estadisticas-empaque*', $cultivo->id) ? '' : 'bg-gray-400' }} rounded-lg" aria-current="page">Empaques</a>
+                        <a href="{{ route('inventario.estadisticas-empaque', $cultivo->id) }}" class="inline-block px-4 py-3 text-white {{ request()->is('inventario.estadisticas-empaque*', $cultivo->id) ? '' : 'bg-green-700' }} rounded-lg" aria-current="page">Empaques</a>
                     </li>
                 </ul>
             @endforeach
@@ -24,13 +24,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 
-                @if(!empty($ventas) && !empty($rangosFechas))
+                @if(!empty($empaques) && !empty($rangosFechas))
                     <!-- Grafico -->
                     <div class="max-w-7xl w-full bg-white rounded-lg shadow dark:bg-gray-800">
                         <div class="flex justify-between p-4 md:p-6 pb-0 md:pb-0">
                         <div>
-                            <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">${{ $ventasSemanales }}</h5>
-                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">Ventas de esta semana</p>
+                            <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">{{ $empaquesSemanales }}</h5>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">No. de empaques de esta semana</p>
                         </div>
                         </div>
                         <div id="labels-chart" class="px-2.5"></div>
@@ -96,7 +96,7 @@
                         <div class="px-4 py-2 -mx-3">
                             <div class="mx-3">
                                 <span class="font-semibold text-red-500">Ups!!! :(</span>
-                                <p class="text-sm text-gray-600">No puedo mostrar las estadísticas porque no hay ninguna venta registrada a este cultivo</p>
+                                <p class="text-sm text-gray-600">No puedo mostrar las estadísticas porque no hay ningún empaque registrada a este cultivo</p>
                             </div>
                         </div>
                     </div>
@@ -105,8 +105,8 @@
                 
                 <script>
                     // JSON de los datos mandados a blade
-                    var mercados = @json($mercados);
-                    var ventas = @json($ventas);
+                    var cultivos = @json($cultivos);
+                    var empaques = @json($empaques);
                     var rangosFechas = @json($rangosFechas);
                 
                     // Crea una variable para el gráfico
@@ -136,20 +136,20 @@
                     }
 
                     // Crea un array para almacenar los datos de la serie
-                    var mercadosData = [];
+                    var cultivosData = [];
 
-                    // Itera sobre los mercados y agrega datos a seriesData
-                    mercados.forEach(function (mercado, index) {
+                    // Itera sobre los cultivos y agrega datos a seriesData
+                    cultivos.forEach(function (cultivo, index) {
                         var colorPastel = generarColorPastelAleatorio();
-                        var datosVentas = ventas[index]; // Obtén los datos de ventas específicos para este mercado
-                        mercadosData.push({
-                            name: mercado.nombre,
-                            data: datosVentas,
+                        var datosEmpaques = empaques[index]; // Obtén los datos de empaques específicos para este cultivo
+                        cultivosData.push({
+                            name: cultivo.nombre,
+                            data: datosEmpaques,
                             color: colorPastel,
                         });
                     });
                     
-                    inicializarGrafico(mercadosData, rangosFechas);
+                    inicializarGrafico(cultivosData, rangosFechas);
                 
                     // Obtén una referencia al botón de consulta por su ID
                     const consulta1 = document.getElementById('consulta1'); //Consulta de los últimos 12 meses
@@ -160,7 +160,7 @@
                 
                     // Agrega un evento click a los botones de la consulta1
                     consulta1.addEventListener('click', function () {
-                        actualizarGrafico(`/inventario-semillas/estadistica/semilla/meses/${id}`);
+                        actualizarGrafico(`/inventario-semillas/estadistica/empaque-semilla/meses/${id}`);
                     });
 
                     // Agrega un evento click a los botones de la consulta2
@@ -172,10 +172,10 @@
                         fechaInicio = fechaInicial_value.replace(/\//g, '-');
                         fechaFin = fechaFinal_value.replace(/\//g, '-');
 
-                        actualizarGrafico(`/inventario-semillas/estadistica/semilla/${id}/fecha1/${fechaInicio}/fecha2/${fechaFin}`);
+                        actualizarGrafico(`/inventario-semillas/estadistica/empaque-semilla/${id}/fecha1/${fechaInicio}/fecha2/${fechaFin}`);
                     });
 
-                    function inicializarGrafico(mercadosData, fechasData) {
+                    function inicializarGrafico(cultivosData, fechasData) {
                         // Crea el nuevo gráfico con los datos
                         const options = {
                             // set the labels option to true to show the labels on the X and Y axis
@@ -205,11 +205,11 @@
                                         cssClass: 'text-xs font-normal fill-gray-500 dark:fill-gray-400'
                                     },
                                     formatter: function (value) {
-                                        return '$' + value;
+                                        return '' + value;
                                     }
                                 }
                             },
-                            series: mercadosData,
+                            series: cultivosData,
                             chart: {
                                 sparkline: {
                                     enabled: false
@@ -271,24 +271,24 @@
                                 // Maneja la respuesta del controlador aquí
                                 console.log(data); // Aquí puedes ver los datos devueltos por el controlador
 
-                                rangosFechas = data[2];
-                                ventas = data[3];
+                                rangosFechas = data[1];
+                                empaques = data[2];
 
-                                // Actualiza los datos en mercadosData con los nuevos datos
-                                let mercadosData = [];
+                                // Actualiza los datos en cultivosData con los nuevos datos
+                                let cultivosData = [];
 
-                                mercados.forEach(function (mercado, index) {
+                                cultivos.forEach(function (cultivo, index) {
                                     var colorPastel = generarColorPastelAleatorio();
-                                    var datosVentas = ventas[index]; // Nuevos datos obtenidos de la solicitud
-                                    mercadosData.push({
-                                        name: mercado.nombre,
-                                        data: datosVentas,
+                                    var datosEmpaques = empaques[index]; // Nuevos datos obtenidos de la solicitud
+                                    cultivosData.push({
+                                        name: cultivo.nombre,
+                                        data: datosEmpaques,
                                         color: colorPastel,
                                     });
                                 });
 
                                 // Inicializa el gráfico con los nuevos datos
-                                inicializarGrafico(mercadosData, rangosFechas);
+                                inicializarGrafico(cultivosData, rangosFechas);
                             })
                             .catch(error => {
                                 console.error('Error al realizar la solicitud AJAX:', error);

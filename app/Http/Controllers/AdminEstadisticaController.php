@@ -54,14 +54,10 @@ class AdminEstadisticaController extends Controller
                         ->where('ventas_cultivos.cultivo_id', '=', $cultivo->id)
                         ->whereDate('ventas_cultivos.fecha', '>=', $startOfWeek)
                         ->whereDate('ventas_cultivos.fecha', '<=', $endOfWeek)
-                        ->groupBy(DB::raw('YEARWEEK(ventas_cultivos.fecha)'))
+                        //->groupBy(DB::raw('YEARWEEK(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasCultivo[] = $sumaMonto;
                     $today->subWeek();
@@ -141,14 +137,10 @@ class AdminEstadisticaController extends Controller
                         ->where('ventas_cultivos.cultivo_id', '=', $cultivo->id)
                         ->whereDate('ventas_cultivos.fecha', '>=', $startOfMonth)
                         ->whereDate('ventas_cultivos.fecha', '<=', $endOfMonth)
-                        ->groupBy(DB::raw('MONTH(ventas_cultivos.fecha)'))
+                        //->groupBy(DB::raw('MONTH(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasCultivo[] = $sumaMonto;
                     $startOfMonth->subMonth();
@@ -212,8 +204,8 @@ class AdminEstadisticaController extends Controller
                     $parteInicio = $fechaActual->copy();
                     $parteFin = $fechaActual->copy()->addMonth();
             
-                    $fechaInicioFormateada = $parteInicio->format('M/y');
-                    $fechaFinFormateada = $parteFin->format('M/y');
+                    $fechaInicioFormateada = $parteInicio->format('d/M/y');
+                    $fechaFinFormateada = $parteFin->format('d/M/y');
                     $fechaActualStr = "$fechaInicioFormateada - $fechaFinFormateada";
                     $rangosFechas[] = $fechaActualStr;
             
@@ -223,14 +215,10 @@ class AdminEstadisticaController extends Controller
                         ->where('ventas_cultivos.cultivo_id', '=', $cultivo->id)
                         ->whereDate('ventas_cultivos.fecha', '>=', $parteInicio)
                         ->whereDate('ventas_cultivos.fecha', '<', $parteFin)
-                        ->groupBy(DB::raw('YEAR(ventas_cultivos.fecha), MONTH(ventas_cultivos.fecha)'))
+                        //->groupBy(DB::raw('YEAR(ventas_cultivos.fecha), MONTH(ventas_cultivos.fecha)'))
                         ->get();
             
-                    if ($venta->count() > 0) {
-                        $sumaMonto = $venta[0]->suma_monto;
-                    } else {
-                        $sumaMonto = 0;
-                    }
+                    $sumaMonto = $venta[0]->suma_monto ?? 0;
             
                     $ventasCultivo[] = $sumaMonto;
                 }
