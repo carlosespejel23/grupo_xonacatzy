@@ -91,7 +91,7 @@
                         <div class="px-4 py-2 -mx-3">
                             <div class="mx-3">
                                 <span class="font-semibold text-red-500">Ups!!! :(</span>
-                                <p class="text-sm text-gray-600">No puedo mostrar las estadísticas porque no hay ninguna venta registrada a este cultivo</p>
+                                <p class="text-sm text-gray-600">No puedo mostrar las estadísticas porque no hay ninguna venta registrada</p>
                             </div>
                         </div>
                     </div>

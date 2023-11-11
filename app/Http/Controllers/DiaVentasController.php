@@ -155,13 +155,16 @@ class DiaVentasController extends Controller
                 // Iterar sobre los datos de la sección 1 (Cultivos y/o Semillas)
                 if (!empty($cantidades_seccion1)) {
                     foreach ($cantidades_seccion1 as $key => $cantidad) {
-                        $ventas = new Venta_Cultivo;
-                        $ventas->fecha = $fecha;
-                        $ventas->mercado_id = $mercadoId;
-                        $ventas->cantidad = $cantidad;
-                        $ventas->cultivo_id = $cultivos_id_seccion1[$key] ?? null;
-                        $ventas->monto = $montos_seccion1[$key];
-                        $ventas->save();
+                        // Asegurarse de que $cantidad no sea nulo antes de intentar insertar
+                        if ($cantidad !== null) {
+                            $ventas = new Venta_Cultivo;
+                            $ventas->fecha = $fecha;
+                            $ventas->mercado_id = $mercadoId;
+                            $ventas->cantidad = $cantidad;
+                            $ventas->cultivo_id = $cultivos_id_seccion1[$key] ?? null;
+                            $ventas->monto = $montos_seccion1[$key];
+                            $ventas->save();
+                        }
                     }
                 }
             } catch (\Exception $e) {
@@ -177,12 +180,15 @@ class DiaVentasController extends Controller
                 // Iterar sobre los datos de la sección 2 (Productos)
                 if (!empty($cantidades_seccion2)) {
                     foreach ($cantidades_seccion2 as $key => $cantidad) {
-                        $ventas = new Venta_Producto;
-                        $ventas->fecha = $fecha;
-                        $ventas->mercado_id = $mercadoId;
-                        $ventas->cantidad = $cantidad;
-                        $ventas->producto_id = $productos_id_seccion2[$key] ?? null;
-                        $ventas->save();
+                        // Asegurarse de que $cantidad no sea nulo antes de intentar insertar
+                        if ($cantidad !== null) {
+                            $ventas = new Venta_Producto;
+                            $ventas->fecha = $fecha;
+                            $ventas->mercado_id = $mercadoId;
+                            $ventas->cantidad = $cantidad;
+                            $ventas->producto_id = $productos_id_seccion2[$key] ?? null;
+                            $ventas->save();
+                        }
                     }
                 }
             } catch (\Throwable $th) {
