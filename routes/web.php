@@ -43,11 +43,15 @@ Route::middleware([
     Route::post('/dashboard/tareas', [RADController::class, 'tareas_create'])->name('tareas-diarias-create');
     Route::patch('/dashboard/empaque/{id}', [RADController::class, 'empaques_update'])->name('empaques-update');
     Route::post('/dashboard/combinado', [RADController::class, 'combinados_create'])->name('combinados-create');
+    Route::delete('/dashboard/registro/{id}', [RADController::class, 'delete'])->name('dashboard-delete');
+    Route::delete('/dashboard/tarea/{id}', [RADController::class, 'tarea_delete'])->name('tarea-delete');
 
     //Seccion "Inventario de Semillas (IDS)"
     Route::get('/inventario-semillas', [IDSController::class, 'index'])->name('inventario.index');
     Route::post('/inventario-semillas/semillas', [IDSController::class, 'semilla_create'])->name('inventario.semilla-create');
     Route::patch('/inventario-semillas/semillas/{id}', [IDSController::class, 'semilla_update'])->name('inventario.semilla-update');
+    Route::delete('/inventario-semillas/registro-entrada/delete/{id}', [IDSController::class, 'registro_historial_delete'])->name('inventario.registro-entrada-delete');
+    Route::delete('/inventario-semillas/registro-salida/delete/{id}', [IDSController::class, 'registro_delete'])->name('inventario.registro-salida-delete');
     Route::get('/inventario-semillas/semillas/provedores', [IDSController::class, 'provedor'])->name('inventario.provedor');
     Route::post('/inventario-semillas/semillas/provedores', [IDSController::class, 'provedor_create'])->name('inventario.provedor-create');
     Route::patch('/inventario-semillas/semillas/provedores/{id}', [IDSController::class, 'provedor_update'])->name('inventario.provedor-update');
@@ -70,6 +74,9 @@ Route::middleware([
     Route::post('/dia-ventas/cultivo', [DiaVentasController::class, 'ventas_create'])->name('diaVentas.ventas_create');
     Route::post('/dia-ventas/gastos', [DiaVentasController::class, 'gastos_create'])->name('diaVentas.gastos_create');
     Route::get('/dia-ventas/gastosTotal/{fecha}', [DiaVentasController::class, 'consultar_datos'])->name('diaVentas.consultar-datos');
+    Route::delete('/dia-ventas/ventas-cultivos/delete/{id}', [DiaVentasController::class, 'ventas_cultivos_delete'])->name('diaVentas.ventas-cultivos-delete');
+    Route::delete('/dia-ventas/ventas-productos/delete/{id}', [DiaVentasController::class, 'ventas_productos_delete'])->name('diaVentas.ventas-productos-delete');
+    Route::delete('/dia-ventas/gastos-extra/delete/{id}', [DiaVentasController::class, 'gastos_extra_delete'])->name('diaVentas.gastos-extra-delete');
 
     //Panel de administrador (navbar)
     Route::get('/administrador', [AdminEstadisticaController::class, 'index'])->name('administrador.index');

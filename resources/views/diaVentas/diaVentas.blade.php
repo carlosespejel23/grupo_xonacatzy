@@ -369,58 +369,129 @@
                         </div><br>
 
                         <!-- Seccion para mostrar los registros de ventas -->
-                        @if ($ventas_cultivos->count())
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                <table id="ventasTable" class="w-full text-sm text-center text-gray-500">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-2">
-                                                Cantidad
+                        @if ($ventas_cultivos->count() || $ventas_productos->count())
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                            <table id="ventasTable" class="w-full text-sm text-center text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-2">
+                                            Cantidad
+                                        </th>
+                                        <th scope="col" class="px-6 py-2">
+                                            Cultivos y/o Productos
+                                        </th>
+                                        <th scope="col" class="px-6 py-2">
+                                            Monto
+                                        </th>
+                                        <th scope="col" class="px-6 py-2">
+                                            Tipo
+                                        </th>
+                                        <th scope="col" class="px-6 py-2">
+                                            Eliminar
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($ventas_cultivos as $index => $venta_cultivo)
+                                        <tr class="bg-white border-b">
+                                            <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                                {{$venta_cultivo->cantidad}}
                                             </th>
-                                            <th scope="col" class="px-6 py-2">
-                                                Cultivos y/o Productos
-                                            </th>
-                                            <th scope="col" class="px-6 py-2">
-                                                Monto
-                                            </th>
+                                            <td class="px-6 py-2">
+                                                {{$venta_cultivo->cultivo}}
+                                            </td>
+                                            <td class="px-6 py-2">
+                                                ${{$venta_cultivo->monto}}
+                                            </td>
+                                            <td class="px-6 py-2">
+                                                Cultivo
+                                            </td>
+                                            <td class="px-6 py-4" scope="row">
+                                                <a data-modal-target="cultivo-modal-{{ $index }}" data-modal-toggle="cultivo-modal-{{ $index }}" class="font-medium text-red-600 hover:underline"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($ventas_cultivos as $venta_cultivo)
-                                            <tr class="bg-white border-b">
-                                                <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                                    {{$venta_cultivo->cantidad}}
-                                                </th>
-                                                <td class="px-6 py-2">
-                                                    {{$venta_cultivo->cultivo}}
-                                                </td>
-                                                <td class="px-6 py-2">
-                                                    ${{$venta_cultivo->monto}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @foreach ($ventas_productos as $venta_producto)
-                                            <tr class="bg-white border-b">
-                                                <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                                    {{$venta_producto->cantidad}}
-                                                </th>
-                                                <td class="px-6 py-2">
-                                                    {{$venta_producto->producto}}
-                                                </td>
-                                                <td class="px-6 py-2">
-                                                    ${{$venta_producto->total}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="font-semibold text-gray-900">
-                                            <th colspan="2" scope="row" class="px-6 py-3 text-base text-right">Venta Total : </th>
-                                            <td class="px-6 py-3">${{ number_format($totalVentas, 2) }}</td>
+                                        
+                                        <!-- Modal para eliminar los registros de venta de cultivos -->
+                                        <div id="cultivo-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                            <div class="relative w-full max-w-md max-h-full">
+                                                <div class="relative bg-white rounded-lg shadow">
+                                                    <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cultivo-modal-{{ $index }}">
+                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                        </svg>
+                                                        <span class="sr-only">Cancelar</span>
+                                                    </button>
+                                                    <form method="POST" action="{{ route('diaVentas.ventas-cultivos-delete', $venta_cultivo->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <div class="p-6 text-center">
+                                                            <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                            </svg>
+                                                            <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar este registro?</h3>
+                                                            <x-button type="submit">Si, estoy seguro</x-button>
+                                                            <x-secondary-button data-modal-hide="cultivo-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
+                                                        </div>
+                                                    </form>                                        
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    @foreach ($ventas_productos as $index => $venta_producto)
+                                        <tr class="bg-white border-b">
+                                            <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                                {{$venta_producto->cantidad}}
+                                            </th>
+                                            <td class="px-6 py-2">
+                                                {{$venta_producto->producto}}
+                                            </td>
+                                            <td class="px-6 py-2">
+                                                ${{$venta_producto->total}}
+                                            </td>
+                                            <td class="px-6 py-2">
+                                                Producto
+                                            </td>
+                                            <td class="px-6 py-4" scope="row">
+                                                <a data-modal-target="producto-modal-{{ $index }}" data-modal-toggle="producto-modal-{{ $index }}" class="font-medium text-red-600 hover:underline"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
                                         </tr>
-                                    </tfoot>
-                                </table>
-                            </div><br>
+
+                                        <!-- Modal para eliminar los registros de venta de productos -->
+                                        <div id="producto-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                            <div class="relative w-full max-w-md max-h-full">
+                                                <div class="relative bg-white rounded-lg shadow">
+                                                    <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="producto-modal-{{ $index }}">
+                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                        </svg>
+                                                        <span class="sr-only">Cancelar</span>
+                                                    </button>
+                                                    <form method="POST" action="{{ route('diaVentas.ventas-productos-delete', $venta_producto->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <div class="p-6 text-center">
+                                                            <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                            </svg>
+                                                            <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar este registro?</h3>
+                                                            <x-button type="submit">Si, estoy seguro</x-button>
+                                                            <x-secondary-button data-modal-hide="producto-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
+                                                        </div>
+                                                    </form>                                        
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="font-semibold text-gray-900">
+                                        <th colspan="2" scope="row" class="px-6 py-3 text-base text-right">Venta Total : </th>
+                                        <td class="px-6 py-3">${{ number_format($totalVentas, 2) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div><br>
 
                         @else
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -469,10 +540,13 @@
                                             <th scope="col" class="px-6 py-2">
                                                 Monto
                                             </th>
+                                            <th scope="col" class="px-6 py-2">
+                                                Eliminar
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($gastos_extras as $gastos_extra)
+                                        @foreach ($gastos_extras as $index => $gastos_extra)
                                             <tr class="bg-white border-b">
                                                 <td class="px-6 py-2">
                                                     {{$gastos_extra->nombre}}
@@ -480,7 +554,36 @@
                                                 <td class="px-6 py-2">
                                                     ${{$gastos_extra->monto}}
                                                 </td>
+                                                <td class="px-6 py-4" scope="row">
+                                                    <a data-modal-target="gasto-modal-{{ $index }}" data-modal-toggle="gasto-modal-{{ $index }}" class="font-medium text-red-600 hover:underline"><i class="fa-solid fa-trash"></i></a>
+                                                </td>
                                             </tr>
+
+                                            <!-- Modal para eliminar los registros de gastos -->
+                                            <div id="gasto-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                <div class="relative w-full max-w-md max-h-full">
+                                                    <div class="relative bg-white rounded-lg shadow">
+                                                        <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="gasto-modal-{{ $index }}">
+                                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                            </svg>
+                                                            <span class="sr-only">Cancelar</span>
+                                                        </button>
+                                                        <form method="POST" action="{{ route('diaVentas.gastos-extra-delete', $gastos_extra->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="p-6 text-center">
+                                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                                </svg>
+                                                                <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar este registro?</h3>
+                                                                <x-button type="submit">Si, estoy seguro</x-button>
+                                                                <x-secondary-button data-modal-hide="gasto-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
+                                                            </div>
+                                                        </form>                                        
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                     <tfoot>

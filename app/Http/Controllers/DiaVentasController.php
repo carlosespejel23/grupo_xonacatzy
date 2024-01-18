@@ -316,4 +316,58 @@ class DiaVentasController extends Controller
             return response()->json(null);
         }
     }
+
+    //Eliminar registro de ventas de cultivos
+    public function ventas_cultivos_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            $ventas_cultivos = Venta_Cultivo::find($id);
+            $ventas_cultivos->delete();
+
+            session()->flash('flash.banner', 'El registro de ventas de cultivos se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('diaVentas.index');
+        } else {
+            return view('dashboard');
+        }
+    }
+
+    //Eliminar registro de ventas de productos
+    public function ventas_productos_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            $ventas_productos = Venta_Producto::find($id);
+            $ventas_productos->delete();
+
+            session()->flash('flash.banner', 'El registro de ventas de productos se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('diaVentas.index');
+        } else {
+            return view('dashboard');
+        }
+    }
+
+    //Eliminar registro de gastos extra
+    public function gastos_extra_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            $gastos_extra = Gasto_Extra::findOrFail($id);
+            $gastos_extra->delete();
+
+            session()->flash('flash.banner', 'El registro de gastos extra se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('diaVentas.index');
+        } else {
+            return view('dashboard');
+        }
+    }
 }

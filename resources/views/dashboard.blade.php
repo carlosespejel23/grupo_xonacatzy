@@ -213,6 +213,11 @@
                                     <th scope="col" class="px-6 py-3">
                                         Encargado
                                     </th>
+                                    @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                                    <th scope="col" class="px-6 py-3">
+                                        Eliminar
+                                    </th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -248,7 +253,38 @@
                                         <td class="px-6 py-4" scope="row">
                                             {{$cosecha->encargado}}
                                         </td>
+                                        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                                        <td class="px-6 py-4" scope="row">
+                                            <a data-modal-target="registro-modal-{{ $index }}" data-modal-toggle="registro-modal-{{ $index }}" class="font-medium text-red-600 hover:underline"><i class="fa-solid fa-trash"></i></a>
+                                        </td>
+                                        @endif
                                     </tr>
+
+                                    <!-- Modal para eliminar los registros de ese cultivo -->
+                                    <div id="registro-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative w-full max-w-md max-h-full">
+                                            <div class="relative bg-white rounded-lg shadow">
+                                                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="registro-modal-{{ $index }}">
+                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                    </svg>
+                                                    <span class="sr-only">Cancelar</span>
+                                                </button>
+                                                <form method="POST" action="{{ route('dashboard-delete', $cosecha->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                        </svg>
+                                                        <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar este registro?</h3>
+                                                        <x-button type="submit">Si, estoy seguro</x-button>
+                                                        <x-secondary-button data-modal-hide="registro-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
+                                                    </div>
+                                                </form>                                        
+                                            </div>
+                                        </div>
+                                    </div>
         
                                 @endforeach
                             </tbody>
@@ -396,9 +432,40 @@
                                                             <i class="fa-solid fa-check fa-sm"></i>&nbsp;
                                                         </svg>
                                                     </span>
-                                                    <h3 class="mb-1 text-md font-semibold text-gray-900">{{$tarea->nombre}}</h3>
+                                                    <div class="flex items-center">
+                                                        <h3 class="mb-1 text-md font-semibold text-gray-900">{{$tarea->nombre}}</h3>&nbsp;&nbsp;&nbsp;
+                                                        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                                                            <a data-modal-target="tarea-modal-{{ $index }}" data-modal-toggle="tarea-modal-{{ $index }}" class="font-medium text-red-600 hover:underline"><i class="fa-solid fa-trash"></i></a>
+                                                        @endif
+                                                    </div>
                                                     <time class="block mb-2 text-sm font-normal leading-none text-gray-400">&nbsp;</time>
                                                 </li>
+
+                                                <!-- Modal para eliminar los tareas de ese cultivo -->
+                                                <div id="tarea-modal-{{ $index }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                    <div class="relative w-full max-w-md max-h-full">
+                                                        <div class="relative bg-white rounded-lg shadow">
+                                                            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="tarea-modal-{{ $index }}">
+                                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                                </svg>
+                                                                <span class="sr-only">Cancelar</span>
+                                                            </button>
+                                                            <form method="POST" action="{{ route('tarea-delete', $tarea->id) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <div class="p-6 text-center">
+                                                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                                    </svg>
+                                                                    <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro que quieres eliminar esta tarea?</h3>
+                                                                    <x-button type="submit">Si, estoy seguro</x-button>
+                                                                    <x-secondary-button data-modal-hide="tarea-modal-{{ $index }}" type="button">No, cancelar</x-secondary-button>
+                                                                </div>
+                                                            </form>                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endforeach
                                 
                                         @else

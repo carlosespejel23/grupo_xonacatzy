@@ -28,6 +28,7 @@ class RADController extends Controller
         //Consulta a la tabla cosechas
         $cosechas = DB::table('cosechas')
             ->select(
+                'cosechas.id',
                 'cultivos.nombre',
                 'cosechas.num_botes',
                 'cosechas.invernadero',
@@ -60,6 +61,7 @@ class RADController extends Controller
         //Consulta a la tabla tareas_diarias
         $tareas = DB::table('tareas_diarias')
             ->select(
+                'tareas_diarias.id',
                 'tareas_diarias.nombre',
             )
             ->whereDate('tareas_diarias.fecha', '=', $fechaActualStr)
@@ -122,6 +124,7 @@ class RADController extends Controller
     public function cosecha_consultar($fecha) {
         $cosechas = DB::table('cosechas')
             ->select(
+                'cosechas.id',
                 'cultivos.nombre',
                 'cosechas.num_botes',
                 'cosechas.invernadero',
@@ -257,5 +260,53 @@ class RADController extends Controller
         session()->flash('flash.bannerStyle', 'success');
     
         return redirect()->route('dashboard');
+    }
+
+    //Elimina los registros de una fila (cosechas, empaques y combinados)
+    public function delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            //Elimina el registro de la tabla "Cosechas"
+            $cosecha = Cosecha::find($id);
+            $cosecha->delete();
+
+            //Elimina el registro de la tabla "Empaques"
+            $empaque = Empaque::find($id);
+            $empaque->delete();
+
+            //Elimina el registro de la tabla "Combinados"
+            $combinado = Combinado::find($id);
+            if($combinado !== null){
+                $combinado->delete();
+            }
+
+            session()->flash('flash.banner', 'El registro se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+        
+            return redirect()->route('dashboard');
+        } else {
+            return view('dashboard');
+        }
+    }
+
+    //Elimina una tarea
+    public function tarea_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            //Elimina el registro de la tabla "Tareas Diarias"
+            $tarea = Tarea_Diaria::find($id);
+            $tarea->delete();
+
+            session()->flash('flash.banner', 'La tarea se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+        
+            return redirect()->route('dashboard');
+        } else {
+            return view('dashboard');
+        }
     }
 }

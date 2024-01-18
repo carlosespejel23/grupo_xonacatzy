@@ -190,4 +190,40 @@ class IDSController extends Controller
 
         return redirect()->route('inventario.registros', $id);
     }
+
+    //Eliminar un registro de salida
+    public function registro_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            $registro = Registro::findOrFail($id);
+            $registro->delete();
+
+            session()->flash('flash.banner', 'El registro de salida se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('inventario.registros', $registro->cultivo_id);
+        } else {
+            return view('dashboard');
+        }
+    }
+
+    //Eliminar un registro de entrada (tabla cultivos historial)
+    public function registro_historial_delete(Request $request, $id) {
+        $userId = $request->user()->id;
+
+        // Verifica si el rol del usuario es'Administrador'
+        if (DB::table('users')->where('id', $userId)->where('tipoUsuario', 'Administrador')) {
+            $historial = Cultivo_Historial::findOrFail($id);
+            $historial->delete();
+
+            session()->flash('flash.banner', 'El registro de entrada se ha eliminado correctamente');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('inventario.registros', $historial->cultivo_id);
+        } else {
+            return view('dashboard');
+        }
+    }
 }
