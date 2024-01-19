@@ -9,6 +9,7 @@ use App\Http\Controllers\RADController;
 use App\Http\Controllers\IDSController;
 use App\Http\Controllers\ProductoEstadisticaController;
 use App\Http\Controllers\SemillaEstadisticaController;
+use App\Http\Controllers\BusquedaController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\RoutePath;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -47,7 +48,7 @@ Route::middleware([
     Route::delete('/dashboard/tarea/{id}', [RADController::class, 'tarea_delete'])->name('tarea-delete');
 
     //Seccion "Inventario de Semillas (IDS)"
-    Route::get('/inventario-semillas', [IDSController::class, 'index'])->name('inventario.index');
+    Route::get('/inventario-semillas', [IDSController::class, 'index'])->name('inventario.index'); //Tambien para la busqueda de cultivos
     Route::post('/inventario-semillas/semillas', [IDSController::class, 'semilla_create'])->name('inventario.semilla-create');
     Route::patch('/inventario-semillas/semillas/{id}', [IDSController::class, 'semilla_update'])->name('inventario.semilla-update');
     Route::delete('/inventario-semillas/registro-entrada/delete/{id}', [IDSController::class, 'registro_historial_delete'])->name('inventario.registro-entrada-delete');
@@ -66,7 +67,7 @@ Route::middleware([
         //Estadisticas de empaque (solo para administrador)
         Route::get('/inventario-semillas/estadistica/empaque-semilla/{id}', [EmpaqueEstadisticaController::class, 'empaque_estadisticas_index'])->name('inventario.estadisticas-empaque');
         Route::get('/inventario-semillas/estadistica/empaque-semilla/meses/{id}', [EmpaqueEstadisticaController::class, 'empaque_estadisticas_12meses'])->name('inventario.estadisticas-empaque-12meses');
-        Route::get('/inventario-semillas/estadistica/empaque-semilla/{id}/fecha1/{fechaInicio}/fecha2/{fechaFin}', [EmpaqueEstadisticaController::class, 'empaque_estadisticas_rangos'])->name('inventario.estadisticas-empaque-rangos');  
+        Route::get('/inventario-semillas/estadistica/empaque-semilla/{id}/fecha1/{fechaInicio}/fecha2/{fechaFin}', [EmpaqueEstadisticaController::class, 'empaque_estadisticas_rangos'])->name('inventario.estadisticas-empaque-rangos');
 
     //Seccion "Dia de Ventas"
     Route::get('/dia-ventas', [DiaVentasController::class, 'index'])->name('diaVentas.index');

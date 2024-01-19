@@ -100,43 +100,108 @@
                 </div>
             </div>
 
+            <!-- Formulario de busqueda simple -->  
+
+            <!-- Division de la pantalla en 3 columnas -->
+            <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+                <!-- Columna 1 -->
+                <div class="col-span-1"></div>
+                <!-- Columna 2 -->
+                <div class="col-span-1">
+                    <form method="GET" action="{{ route('inventario.index') }}">
+                        @csrf 
+                        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Buscar Cultivo</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input id="search" name="search" type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-green-500 focus:border-green-500" placeholder="Buscar Cultivo..." required>
+                            <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">Buscar</button>
+                        </div>
+                    </form><br>
+                </div>
+                <!-- Columna 3 -->
+                <div class="col-span-1"></div>
+            </div>
+            
             <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-5">
             
                 @if($cultivos->count())
-                    @foreach ($cultivos as $index => $cultivo)
-                    <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow text-center">
-                        <i class="fa-solid fa-seedling fa-lg" style="color: #19d72f;"></i>
-                        <a href="{{ route('inventario.registros', $cultivo->id) }}">
-                            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{$cultivo->nombre}}</h2><br>
-                        </a>
 
-                        @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
-                            <div class="flex items-center" style="margin-left: 5px; justify-content: center;">
-                                <div class="block mt-1 w-2/4">
-                                    <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
-                                        Detalles
-                                        <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="block mt-1 w-2/4">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
-                                        <i class="fa-solid fa-chart-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        @else
-                            <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
-                                Detalles
-                                <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
+                    @if ($cultivoBusqueda->count())
+                        @foreach ($cultivoBusqueda as $index => $cultivo)
+                        <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow text-center">
+                            <i class="fa-solid fa-seedling fa-lg" style="color: #19d72f;"></i>
+                            <a href="{{ route('inventario.registros', $cultivo->id) }}">
+                                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{$cultivo->nombre}}</h2><br>
                             </a>
-                        @endif
 
-                    </div>
-                    @endforeach
+                            @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                                <div class="flex items-center" style="margin-left: 5px; justify-content: center;">
+                                    <div class="block mt-1 w-2/4">
+                                        <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                            Detalles
+                                            <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div class="block mt-1 w-2/4">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
+                                            <i class="fa-solid fa-chart-line"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                    Detalles
+                                    <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                            @endif
+
+                        </div>
+                        @endforeach
+                    @else
+                        @foreach ($cultivos as $index => $cultivo)
+                        <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow text-center">
+                            <i class="fa-solid fa-seedling fa-lg" style="color: #19d72f;"></i>
+                            <a href="{{ route('inventario.registros', $cultivo->id) }}">
+                                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{$cultivo->nombre}}</h2><br>
+                            </a>
+
+                            @if (DB::table('users')->where('tipoUsuario', 'Administrador')->where('id', auth()->user()->id)->exists())
+                                <div class="flex items-center" style="margin-left: 5px; justify-content: center;">
+                                    <div class="block mt-1 w-2/4">
+                                        <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                            Detalles
+                                            <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div class="block mt-1 w-2/4">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ route('inventario.estadisticas', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
+                                            <i class="fa-solid fa-chart-line"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                <a href="{{ route('inventario.registros', $cultivo->id) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300">
+                                    Detalles
+                                    <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                            @endif
+
+                        </div>
+                        @endforeach
+                    @endif
+                    
                 @endif
 
             </div>

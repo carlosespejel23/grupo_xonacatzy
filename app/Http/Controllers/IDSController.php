@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\DB;
 //Controlador de la seccion "Inventario de Semillas (IDS)"
 class IDSController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
        //Consulta a los cultivos
        $cultivos = Cultivo::orderBy('nombre', 'asc')->get();
        $provedores = Provedor::all();
+       //Busqueda simple de cultivos por palabras clave
+       $cultivoBusqueda = Cultivo::search($request->search)->get();
 
-        return view('inventarioSemillas.inventarioSemillas', compact('cultivos', 'provedores'));
+        return view('inventarioSemillas.inventarioSemillas', compact('cultivos', 'provedores', 'cultivoBusqueda'));
     }
 
     //Crear una semilla
